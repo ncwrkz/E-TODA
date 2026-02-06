@@ -1,45 +1,233 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>E-TODA — Soon</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <link rel="icon" type="image/png" href="logo.png">
-  <link rel="stylesheet" href="anim.css" />
+  <title>E-TODA</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <section class="hero">
-    <div class="headline">
-      <h1>E-TODA</h1>
-      <p>Tricycle Booking System</p>
-    </div>
+  <main class="wrap">
+    <section class="card">
+      <img id="trike" class="logo" src="logo.png" alt="E-TODA" />
 
-    <div class="soon-badge" aria-label="Coming soon">SOON!</div>
+      <h1 class="title">E-TODA</h1>
+      <p class="sub">Web Based Tricycle Booking</p>
 
-    <div class="scene">
-      <div class="skyGlow"></div>
-
-      <div class="road">
-        <div class="lane"></div>
-        <div class="lane lane2"></div>
+      <div class="row">
+        <button id="btnRegister" class="btn primary floatBtn">Get Started</button>
+        <button id="btnLogin" class="btn secondary floatBtn">Continue</button>
       </div>
 
-      <div class="trikeWrap" id="trikeWrap">
-        <div class="smoke" id="smoke"></div>
+    </section>
+  </main>
 
-        <!-- Your image -->
-        <img class="trikeImg" src="tricycle.png" alt="Tricycle" />
-
-        <!-- Fake wheels (position these over your wheel area) -->
-        <div class="wheel w1"></div>
-        <div class="wheel w2"></div>
+  <!-- MODAL -->
+  <div id="modal" class="modal hidden" aria-hidden="true">
+    <div class="modalCard" role="dialog" aria-modal="true">
+      <div class="modalTop">
+        <h2 id="modalTitle">Login</h2>
+        <button id="closeModal" class="xBtn" aria-label="Close">✕</button>
       </div>
+
+      <!-- LOGIN PANEL -->
+      <form id="loginPanel" class="panel hidden">
+        <label class="field">
+          <span>Username</span>
+          <input id="loginUser" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input id="loginPass" type="password" required />
+        </label>
+
+        <button class="btn primary full" type="submit">Login</button>
+
+        <p class="switch">
+          No account?
+          <button type="button" class="linkBtn" id="toRegister">Register</button>
+        </p>
+      </form>
+
+      <!-- REGISTER PANEL -->
+<!-- REGISTER PANEL (PDS) -->
+<form id="registerPanel" class="panel hidden">
+  <input type="hidden" id="uniqueId" />
+  <input type="hidden" id="userTypeHidden" />
+
+  <label class="field">
+    <span>Register As</span>
+    <select id="userType" required>
+      <option value="commuter">Commuter</option>
+      <option value="driver">Driver / Operator</option>
+    </select>
+  </label>
+
+  <h3 class="secTitle">Account Security</h3>
+  <div class="grid2">
+    <label class="field">
+      <span>Contact Number</span>
+      <input id="regContact" type="tel" placeholder="09xxxxxxxxx" required />
+    </label>
+    <label class="field">
+      <span>Email Address</span>
+      <input id="regEmail" type="email" placeholder="name@email.com" required />
+    </label>
+  </div>
+
+  <div class="grid2">
+    <label class="field">
+      <span>Password</span>
+      <input id="regPass" type="password" minlength="4" required />
+    </label>
+    <label class="field">
+      <span>Confirm Password</span>
+      <input id="regPass2" type="password" minlength="4" required />
+    </label>
+  </div>
+
+  <div class="otpBox">
+    <button type="button" class="btn secondary" id="sendOtpBtn">Send OTP</button>
+    <label class="field otpField">
+      <span>One Time Password (SMS)</span>
+      <input id="regOtp" inputmode="numeric" placeholder="Enter OTP" required />
+    </label>
+  </div>
+
+  <!-- COMMON: Name + basic info -->
+  <h3 class="secTitle">Personal Background</h3>
+  <div class="grid3">
+    <label class="field"><span>Last Name</span><input id="lastName" required /></label>
+    <label class="field"><span>First Name</span><input id="firstName" required /></label>
+    <label class="field"><span>Middle Name</span><input id="middleName" /></label>
+  </div>
+
+  <div class="grid2">
+    <label class="field">
+      <span>Date of Birth</span>
+      <input id="dob" type="date" required />
+    </label>
+    <label class="field">
+      <span>Civil Status</span>
+      <select id="civilStatus" required>
+        <option value="">Select</option>
+        <option>Single</option>
+        <option>Married</option>
+        <option>Widowed</option>
+        <option>Separated</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- DRIVER/OPERATOR SECTION -->
+  <div id="driverSection" class="sectionBlock hidden">
+    <h3 class="secTitle">Driver & Operator PDS</h3>
+
+    <label class="field">
+      <span>Permanent Address (Barangay / Zone / Sitio)</span>
+      <input id="driverAddress" placeholder="e.g., Brgy. ___, Zone ___" required />
+    </label>
+
+    <h4 class="subTitle">Legal & Professional Credentials</h4>
+    <div class="grid2">
+      <label class="field">
+        <span>Professional Driver’s License (Restriction A1 / Code 1) (Photo)</span>
+        <input id="licensePhoto" type="file" accept="image/*" capture="environment" required />
+      </label>
+      <label class="field">
+        <span>License Expiry Date (Photo)</span>
+        <input id="licenseExpiryPhoto" type="file" accept="image/*" capture="environment" required />
+      </label>
     </div>
 
-    <div class="hint">Tip: click the tricycle to speed up 🚀</div>
-  </section>
+    <label class="field">
+      <span>Digital Scan of License (Front & Back)</span>
+      <input id="licenseScan" type="file" accept="image/*" capture="environment" multiple required />
+    </label>
 
-  <script src="anim.js"></script>
+    <h4 class="subTitle">Franchise & Association Details</h4>
+    <div class="grid2">
+      <label class="field">
+        <span>MTOP Number and Expiry Date (Photo)</span>
+        <input id="mtopPhoto" type="file" accept="image/*" capture="environment" required />
+      </label>
+      <label class="field">
+        <span>LGU Body Number / Sidecar Identifier (Photo)</span>
+        <input id="lguBodyPhoto" type="file" accept="image/*" capture="environment" required />
+      </label>
+    </div>
+
+    <label class="field">
+      <span>TODA Membership Certificate (Photo)</span>
+      <input id="todaCert" type="file" accept="image/*" capture="environment" required />
+    </label>
+
+    <h4 class="subTitle">Security & Verification</h4>
+    <div class="grid2">
+      <label class="field">
+        <span>Recent NBI / Police Clearance (Photo)</span>
+        <input id="clearancePhoto" type="file" accept="image/*" capture="environment" required />
+      </label>
+      <label class="field">
+        <span>Live Selfie (Shift Start Verification)</span>
+        <input id="liveSelfie" type="file" accept="image/*" capture="user" required />
+      </label>
+    </div>
+
+    <h4 class="subTitle">Medical & Emergency</h4>
+    <div class="grid2">
+      <label class="field">
+        <span>Emergency Contact Person (Name)</span>
+        <input id="driverEmergName" required />
+      </label>
+      <label class="field">
+        <span>Emergency Contact Mobile</span>
+        <input id="driverEmergMobile" type="tel" required />
+      </label>
+    </div>
+  </div>
+
+  <!-- COMMUTER SECTION -->
+  <div id="commuterSection" class="sectionBlock">
+    <h3 class="secTitle">Commuter PDS</h3>
+
+    <label class="field">
+      <span>Home Barangay / Zone</span>
+      <input id="homeZone" placeholder="e.g., Brgy. ___, Zone ___" required />
+    </label>
+
+    <div class="grid2">
+      <label class="field">
+        <span>Trusted Contact (Name)</span>
+        <input id="trustedName" required />
+      </label>
+      <label class="field">
+        <span>Trusted Contact (Mobile)</span>
+        <input id="trustedMobile" type="tel" required />
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Picture of User (Photo)</span>
+      <input id="commuterPhoto" type="file" accept="image/*" capture="user" required />
+    </label>
+  </div>
+
+  <button class="btn primary full" type="submit">Submit Registration</button>
+
+  <p class="switch">
+    Already have an account?
+    <button type="button" class="linkBtn" id="toLogin">Login</button>
+  </p>
+</form>
+
+      <p id="msg" class="msg" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>

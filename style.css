@@ -1,0 +1,289 @@
+/* =========================
+   E-TODA Standard UI CSS
+   Normal website sizing
+   ========================= */
+
+:root{
+  --bg1:#1e2c5b;
+  --bg2:#0d6a72;
+
+  --panelTop: rgba(39,64,125,.55);
+  --panelBottom: rgba(13,106,114,.55);
+
+  --modalBg:#0c1b2a;
+  --inputBg:#071320;
+
+  --stroke: rgba(255,255,255,.14);
+  --stroke2: rgba(255,255,255,.08);
+
+  --text:#ffffff;
+  --primary:#00c2ff;
+  --secondary:#1e2c5b;
+}
+
+/* ===== Base Typography (Standard) ===== */
+html{
+  font-size:16px;   /* Standard web size */
+}
+
+body{
+  margin:0;
+  font-family:"Segoe UI", Roboto, Arial, sans-serif;
+  line-height:1.5;
+  color:var(--text);
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));
+}
+
+*{ box-sizing:border-box; }
+
+/* =========================
+   START PAGE
+   ========================= */
+.wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.card{
+  width:min(520px, 92vw);
+  padding:28px 24px;
+  border-radius:18px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(180deg,var(--panelTop),var(--panelBottom));
+  text-align:center;
+}
+
+.logo{
+  width:220px;
+  max-width:90%;
+  margin:0 auto 8px;
+  display:block;
+}
+
+.title{
+  font-size:1.6rem;
+  margin:4px 0;
+}
+
+.sub{
+  font-size:1rem;
+  margin-bottom:14px;
+}
+
+.row{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.hint{
+  font-size:.85rem;
+  opacity:.8;
+  margin-top:8px;
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+.btn{
+  border:none;
+  border-radius:10px;
+  padding:12px 20px;
+  font-size:1rem;
+  cursor:pointer;
+  color:white;
+}
+
+.btn.primary{ background:var(--primary); }
+.btn.secondary{ background:var(--secondary); }
+
+.btn.full{
+  width:100%;
+  margin-top:8px;
+}
+
+/* =========================
+   MODAL
+   ========================= */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+
+.hidden{ display:none !important; }
+
+.modalCard{
+  width:min(640px, 95vw);
+  max-height:85vh;
+  overflow:auto;
+  background:var(--modalBg);
+  border-radius:16px;
+  padding:20px;
+}
+
+/* Modal header */
+.modalTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.modalTop h2{
+  font-size:1.2rem;
+  margin:0;
+}
+
+.xBtn{
+  background:#ffffff18;
+  border:none;
+  color:white;
+  border-radius:8px;
+  padding:6px 10px;
+  cursor:pointer;
+}
+
+/* =========================
+   FORMS
+   ========================= */
+.field{
+  margin:10px 0;
+  display:block;
+  text-align:left;
+}
+
+.field span{
+  font-size:.85rem;
+  display:block;
+  margin-bottom:4px;
+}
+
+.field input,
+.field select{
+  width:100%;
+  padding:12px;
+  font-size:.95rem;
+  border-radius:8px;
+  border:1px solid var(--stroke2);
+  background:var(--inputBg);
+  color:white;
+}
+
+/* Section titles */
+.secTitle{
+  font-size:1rem;
+  margin-top:14px;
+}
+
+.subTitle{
+  font-size:.9rem;
+  margin-top:10px;
+}
+
+/* =========================
+   GRID LAYOUT
+   ========================= */
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+
+/* OTP row */
+.otpBox{
+  display:grid;
+  grid-template-columns:130px 1fr;
+  gap:10px;
+}
+
+/* Message / Links */
+.msg{
+  font-size:.85rem;
+  margin-top:8px;
+}
+
+.switch{
+  text-align:center;
+  margin-top:10px;
+}
+
+.linkBtn{
+  background:none;
+  border:none;
+  color:var(--primary);
+  cursor:pointer;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+@media(max-width:600px){
+  .grid2,
+  .grid3{
+    grid-template-columns:1fr;
+  }
+
+  .otpBox{
+    grid-template-columns:1fr;
+  }
+
+  .btn{
+    width:100%;
+  }
+}
+
+/* Floating on mouse hover */
+#trike{
+  transition: transform 0.25s ease, filter 0.25s ease;
+  cursor: pointer;
+}
+
+#trike:hover{
+  transform: translateY(-18px) scale(1.04);
+  filter: drop-shadow(0 16px 16px rgba(0,0,0,.35));
+}
+
+/* Smooth animation */
+.btn{
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+/* Hover float */
+.btn:hover{
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 10px 16px rgba(0,0,0,.3);
+  filter: brightness(1.05);
+}
+
+/* Click press effect */
+.btn:active{
+  transform: translateY(1px) scale(0.98);
+  box-shadow: none;
+}
+
+/* Continuous floating animation */
+@keyframes floatIdle {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Apply to trike */
+#trike{
+  animation: floatIdle 3s ease-in-out infinite;
+}

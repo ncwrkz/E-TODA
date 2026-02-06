@@ -1,0 +1,112 @@
+:root{
+  --bg1:#1e2c5b;
+  --bg2:#0d6a72;
+  --panel: rgba(12,27,42,.72);
+  --stroke: rgba(255,255,255,.14);
+  --text:#fff;
+  --muted: rgba(255,255,255,.82);
+  --primary:#00c2ff;
+  --danger:#ff4d4d;
+}
+
+*{ box-sizing:border-box; }
+html{ font-size:16px; }
+
+body{
+  margin:0;
+  font-family:"Segoe UI", Roboto, Arial, sans-serif;
+  color:var(--text);
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 18px;
+  border-bottom:1px solid var(--stroke);
+  background: rgba(0,0,0,.12);
+  backdrop-filter: blur(6px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brandLogo{
+  width:46px;
+  height:46px;
+  border-radius:10px;
+  background: rgba(255,255,255,.08);
+  padding:6px;
+}
+
+.brandTitle{ font-weight:700; letter-spacing:1px; }
+.brandSub{ font-size:.85rem; opacity:.85; }
+
+.wrap{
+  max-width:980px;
+  margin:0 auto;
+  padding:18px;
+  display:grid;
+  gap:14px;
+}
+
+.card{
+  background: var(--panel);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:18px;
+}
+
+.hero h1{ margin:0 0 6px; }
+.muted{ color:var(--muted); margin:0; }
+
+.stats{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+.stat{
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:12px;
+  background: rgba(255,255,255,.05);
+}
+.statLabel{ font-size:.85rem; opacity:.85; }
+.statValue{ font-size:1.05rem; font-weight:700; margin-top:4px; }
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:10px;
+  margin-top:10px;
+}
+
+.btn{
+  border:none;
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:1rem;
+  cursor:pointer;
+  color:white;
+  background: rgba(255,255,255,.10);
+  transition: transform .15s ease, filter .15s ease;
+}
+.btn:hover{ transform: translateY(-2px); filter: brightness(1.05); }
+.btn:active{ transform: translateY(1px); }
+
+.btn.primary{ background: var(--primary); color:#00121a; font-weight:700; }
+.btn.danger{ background: var(--danger); }
+
+.hidden{ display:none !important; }
+
+@media (max-width:720px){
+  .stats{ grid-template-columns: 1fr; }
+  .grid{ grid-template-columns: 1fr; }
+}

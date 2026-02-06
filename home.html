@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>E-TODA • Home</title>
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <img class="brandLogo" src="images/logo.png" alt="E-TODA" />
+      <div class="brandText">
+        <div class="brandTitle">E-TODA</div>
+        <div class="brandSub">Tricycle Booking System</div>
+      </div>
+    </div>
+
+    <button id="logoutBtn" class="btn danger">Logout</button>
+  </header>
+
+  <main class="wrap">
+    <section class="card hero">
+      <h1 id="welcomeText">Welcome</h1>
+      <p id="whoami" class="muted"></p>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="statLabel">Account ID</div>
+          <div id="uid" class="statValue">—</div>
+        </div>
+        <div class="stat">
+          <div class="statLabel">Role</div>
+          <div id="role" class="statValue">—</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Passenger -->
+    <section id="passengerPanel" class="card hidden">
+      <h2>Passenger Actions</h2>
+      <div class="grid">
+        <button class="btn primary" onclick="go('passenger.html')">Book a Ride</button>
+        <button class="btn" onclick="go('bookings.html')">My Bookings</button>
+        <button class="btn" onclick="go('reviews.html')">My Reviews</button>
+      </div>
+    </section>
+
+    <!-- Driver -->
+    <section id="driverPanel" class="card hidden">
+      <h2>Driver Actions</h2>
+      <div class="grid">
+        <button class="btn primary" onclick="go('driver.html')">Open Driver Dashboard</button>
+        <button class="btn" onclick="go('driver-trips.html')">Trips</button>
+        <button class="btn" onclick="go('driver-profile.html')">My PDS Profile</button>
+      </div>
+    </section>
+
+    <!-- Admin -->
+    <section id="adminPanel" class="card hidden">
+      <h2>Admin Actions</h2>
+      <div class="grid">
+        <button class="btn primary" onclick="go('admin.html')">Open Admin Panel</button>
+        <button class="btn" onclick="go('users.html')">Manage Users</button>
+        <button class="btn" onclick="go('reports.html')">Reports</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="home.js"></script>
+</body>
+</html>
