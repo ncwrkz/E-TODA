@@ -7,7 +7,7 @@ function getSession(){
 
 function logout(){
   localStorage.removeItem(SESSION_KEY);
-  window.location.href = "start.html"; // or index.html
+  window.location.href = "index.html"; // or index.html
 }
 
 function go(page){
@@ -22,8 +22,7 @@ if(!sess){
 
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
-document.getElementById("whoami").textContent =
-  `Signed in as: ${sess.username || "User"} • ${sess.role || "passenger"}`;
+document.getElementById("whoami").textContent = `${sess.username || "User"}`;
 
 document.getElementById("uid").textContent = sess.uniqueId || "—";
 document.getElementById("role").textContent = (sess.role || "passenger").toUpperCase();

@@ -35,7 +35,7 @@
       <!-- LOGIN PANEL -->
       <form id="loginPanel" class="panel hidden">
         <label class="field">
-          <span>Username</span>
+        <span>Email or Contact Number</span>
           <input id="loginUser" required />
         </label>
 
@@ -43,7 +43,7 @@
           <span>Password</span>
           <input id="loginPass" type="password" required />
         </label>
-
+        
         <button class="btn primary full" type="submit">Login</button>
 
         <p class="switch">
@@ -215,6 +215,17 @@
       <input id="commuterPhoto" type="file" accept="image/*" capture="user" required />
     </label>
   </div>
+  <!-- Terms & Conditions -->
+<div class="tcRow">
+  <label class="tcCheck">
+    <input id="agreeTC" type="checkbox" required />
+    <span>
+      I agree to the
+      <button type="button" class="linkBtn" id="openTC">Terms & Conditions</button>
+      and confirm my information is true and accurate.
+    </span>
+  </label>
+</div>
 
   <button class="btn primary full" type="submit">Submit Registration</button>
 
@@ -222,11 +233,73 @@
     Already have an account?
     <button type="button" class="linkBtn" id="toLogin">Login</button>
   </p>
+  
 </form>
 
       <p id="msg" class="msg" aria-live="polite"></p>
     </div>
   </div>
+   <!-- TERMS MODAL -->
+<div id="tcModal" class="modal hidden" aria-hidden="true">
+  <div class="modalCard" role="dialog" aria-modal="true">
+    <div class="modalTop">
+      <h2>Terms & Conditions</h2>
+      <button id="closeTC" class="xBtn" aria-label="Close">✕</button>
+    </div>
+
+    <div class="tcBody">
+      <p><strong>E-TODA Digital Personal Data Sheet (PDS) Agreement</strong></p>
+      <p>
+        By creating an account, you consent to the collection and processing of your information for
+        accountability, safety, verification, incident reporting, and regulatory compliance.
+      </p>
+
+      <h3>1. Data Collection</h3>
+      <p>
+        We collect information you provide during registration (e.g., identity details, contact information,
+        uploaded images/documents) to support booking services, verification, and safety features.
+      </p>
+
+      <h3>2. Verification & Safety</h3>
+      <p>
+        Drivers/operators may be required to submit additional documents (license, clearances, franchise/association
+        records) and a live selfie for verification and public safety.
+      </p>
+
+      <h3>3. Use of Data</h3>
+      <ul>
+        <li>Account creation and service access</li>
+        <li>Identity and document verification</li>
+        <li>Safety features (SOS, trusted contact sharing)</li>
+        <li>Incident/insurance reporting when applicable</li>
+        <li>Compliance with lawful requests and regulations</li>
+      </ul>
+
+      <h3>4. Data Retention</h3>
+      <p>
+        Data may be retained as required for operational needs and compliance. You may request updates/corrections
+        to your personal details.
+      </p>
+
+      <h3>5. User Responsibilities</h3>
+      <ul>
+        <li>You confirm the information submitted is accurate and belongs to you.</li>
+        <li>You must keep your account credentials confidential.</li>
+        <li>Misuse, fraud, or false submissions may lead to account suspension.</li>
+      </ul>
+
+      <h3>6. OTP & Account Security</h3>
+      <p>
+        One-time passwords (OTP) are used to verify your mobile number. Do not share OTP codes with anyone.
+      </p>
+
+      <h3>7. Consent</h3>
+      <p>
+        By checking the agreement box, you consent to these terms and the processing of your data for the stated purposes.
+      </p>
+    </div>
+  </div>
+</div>
 
   <script src="app.js"></script>
 </body>

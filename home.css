@@ -110,3 +110,30 @@ body{
   .stats{ grid-template-columns: 1fr; }
   .grid{ grid-template-columns: 1fr; }
 }
+
+/* Header user info */
+.topInfo{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.infoBox{
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:6px 12px;
+  border-radius:10px;
+  text-align:left;
+  min-width:120px;
+}
+
+.infoBox span{
+  font-size:.7rem;
+  opacity:.75;
+  display:block;
+}
+
+.infoBox strong{
+  font-size:.9rem;
+  letter-spacing:.5px;
+}

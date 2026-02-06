@@ -287,3 +287,47 @@ body{
 #trike{
   animation: floatIdle 3s ease-in-out infinite;
 }
+
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+
+   .tcRow{
+  margin: 12px 0 6px;
+  text-align:left;
+}
+
+.tcCheck{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  font-size:.95rem;
+  line-height:1.4;
+}
+
+.tcCheck input{
+  margin-top:4px;
+  transform: scale(1.15);
+}
+
+.tcBody{
+  max-height: 60vh;
+  overflow:auto;
+  padding-right: 6px;
+}
+
+.tcBody h3{
+  margin: 12px 0 6px;
+  font-size: 1rem;
+}
+
+.tcBody p, .tcBody li{
+  font-size: .95rem;
+  opacity: .92;
+}
+
+.tcCheck input:invalid{
+  outline: 2px solid #ff6b6b;
+}

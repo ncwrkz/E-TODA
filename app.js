@@ -1,312 +1,391 @@
 // =========================
-// E-TODA Start Page Logic (Login + PDS Register)
-// Continue Button -> Login Panel
-// Get Started Button -> Register Panel
+// E-TODA Start.js (FIXED ALL-IN-ONE)
+// Login + PDS Register + OTP + Safe Required Toggles
 // =========================
 
-// Keys (match your project keys if you already have them)
+// ===== Block access to login/register if already logged in =====
+(function(){
+
+  const SESSION_KEY = "esakay_session_v1";
+
+  try{
+    const sess = JSON.parse(localStorage.getItem(SESSION_KEY));
+
+    if(sess){
+      // Already logged in → send to homepage
+      window.location.href = "home.html";
+    }
+
+  }catch(e){
+    console.error("Session check failed", e);
+  }
+
+})();
+
+
 const SESSION_KEY = "esakay_session_v1";
 const USERS_KEY   = "esakay_users_v1";
 
-// Elements
-const modal         = document.getElementById("modal");
-const modalTitle    = document.getElementById("modalTitle");
-const closeModalBtn = document.getElementById("closeModal");
+// ---------- helpers ----------
+const $ = (id) => document.getElementById(id);
 
-const loginPanel    = document.getElementById("loginPanel");
-const registerPanel = document.getElementById("registerPanel");
-const msg           = document.getElementById("msg");
-
-const btnLogin      = document.getElementById("btnLogin");      // Continue
-const btnRegister   = document.getElementById("btnRegister");   // Get Started
-
-// Register form (PDS) elements
-const userType        = document.getElementById("userType");          // commuter/driver
-const driverSection   = document.getElementById("driverSection");
-const commuterSection = document.getElementById("commuterSection");
-const uniqueIdEl      = document.getElementById("uniqueId");          // hidden unique id
-const userTypeHidden  = document.getElementById("userTypeHidden");    // hidden identification
-
-// OTP demo state
-let currentOtp = null;
-
-// -------------------------
-// Floating trike
-// -------------------------
-const trike = document.getElementById("trike");
-if (trike) {
-  const on = () => trike.classList.add("is-float");
-  const off = () => trike.classList.remove("is-float");
-  trike.addEventListener("touchstart", on, { passive: true });
-  trike.addEventListener("touchend", off);
-  trike.addEventListener("touchcancel", off);
-  trike.addEventListener("mouseenter", on);
-  trike.addEventListener("mouseleave", off);
-  trike.addEventListener("click", () => { on(); setTimeout(off, 250); });
+function safeJSONParse(v, fallback) {
+  try { return JSON.parse(v); } catch { return fallback; }
 }
 
-// Button floating
-document.querySelectorAll(".floatBtn").forEach(btn => {
-  const on = () => btn.classList.add("active");
-  const off = () => btn.classList.remove("active");
-  btn.addEventListener("touchstart", on, { passive: true });
-  btn.addEventListener("touchend", off);
-  btn.addEventListener("touchcancel", off);
-  btn.addEventListener("mouseenter", on);
-  btn.addEventListener("mouseleave", off);
-});
-
-// -------------------------
-// Modal helpers
-// -------------------------
-function openModal(which) {
-  modal.classList.remove("hidden");
-  modal.setAttribute("aria-hidden", "false");
-  msg.textContent = "";
-
-  if (which === "login") {
-    modalTitle.textContent = "Login";
-    loginPanel.classList.remove("hidden");
-    registerPanel.classList.add("hidden");
-  } else {
-    modalTitle.textContent = "Register";
-    registerPanel.classList.remove("hidden");
-    loginPanel.classList.add("hidden");
-    prepareRegister(); // ✅ important for PDS form
-  }
+function getUsers(){
+  return safeJSONParse(localStorage.getItem(USERS_KEY) || "[]", []);
 }
 
-function closeModal() {
-  modal.classList.add("hidden");
-  modal.setAttribute("aria-hidden", "true");
-  msg.textContent = "";
-}
-
-// Connect buttons
-btnLogin?.addEventListener("click", () => openModal("login"));        // Continue -> Login
-btnRegister?.addEventListener("click", () => openModal("register"));  // Get Started -> Register
-
-// Close actions
-closeModalBtn?.addEventListener("click", closeModal);
-modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-
-// Switch links
-document.getElementById("toRegister")?.addEventListener("click", () => openModal("register"));
-document.getElementById("toLogin")?.addEventListener("click", () => openModal("login"));
-
-// -------------------------
-// Storage helpers
-// -------------------------
-function getUsers() {
-  try { return JSON.parse(localStorage.getItem(USERS_KEY) || "[]"); }
-  catch { return []; }
-}
-function setUsers(users) {
+function setUsers(users){
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
-function setSession(sess) {
+
+function setSession(sess){
   localStorage.setItem(SESSION_KEY, JSON.stringify(sess));
 }
-function redirectByRole(role) {
-  if (role === "admin") return (window.location.href = "home.html");
-  if (role === "driver") return (window.location.href = "home.html");
-  return (window.location.href = "home.html");
+
+function redirectHome(){
+  window.location.href = "home.html";
 }
 
-// -------------------------
-// Register helpers (PDS)
-// -------------------------
-function genUniqueId() {
-  return "ETODA-" + Date.now().toString(36).toUpperCase() + "-" + Math.floor(Math.random() * 9999);
+function genUniqueId(){
+  return "ETODA-" + Date.now().toString(36).toUpperCase() + "-" + Math.floor(Math.random()*9999);
 }
 
-function prepareRegister() {
-  // auto-generate hidden unique ID every time Register opens
-  if (uniqueIdEl) uniqueIdEl.value = genUniqueId();
-
-  // reset OTP
-  currentOtp = null;
-
-  // sync user type sections + hidden identification
-  syncTypeSections();
+function setReq(id, required){
+  const el = $(id);
+  if(el) el.required = !!required;
 }
 
-function syncTypeSections() {
-  if (!userType) return;
+function show(el){ if(el) el.classList.remove("hidden"); }
+function hide(el){ if(el) el.classList.add("hidden"); }
 
-  const t = userType.value; // "driver" or "commuter"
-  if (userTypeHidden) userTypeHidden.value = t; // hidden identification
+function setMsg(text){
+  const m = $("msg");
+  if(m) m.textContent = text || "";
+}
 
-  // Toggle sections
-  if (t === "driver") {
-    driverSection?.classList.remove("hidden");
-    commuterSection?.classList.add("hidden");
+// ---------- elements ----------
+const modal         = $("modal");
+const modalTitle    = $("modalTitle");
+const closeModalBtn = $("closeModal");
 
-    // commuter required off
-    const homeZone = document.getElementById("homeZone");
-    const trustedName = document.getElementById("trustedName");
-    const trustedMobile = document.getElementById("trustedMobile");
-    const commuterPhoto = document.getElementById("commuterPhoto");
-    if (homeZone) homeZone.required = false;
-    if (trustedName) trustedName.required = false;
-    if (trustedMobile) trustedMobile.required = false;
-    if (commuterPhoto) commuterPhoto.required = false;
+const loginPanel    = $("loginPanel");
+const registerPanel = $("registerPanel");
 
-    // driver required on
-    const driverAddress = document.getElementById("driverAddress");
-    if (driverAddress) driverAddress.required = true;
+const btnLogin      = $("btnLogin");     // Continue
+const btnRegister   = $("btnRegister");  // Get Started
+
+// Register PDS elements
+const userType        = $("userType");         // commuter/driver
+const driverSection   = $("driverSection");
+const commuterSection = $("commuterSection");
+const uniqueIdEl      = $("uniqueId");
+const userTypeHidden  = $("userTypeHidden");
+
+// OTP
+let currentOtp = null;
+
+// ---------- floating hover/click (NO CSS required) ----------
+function attachFloatTo(el){
+  if(!el) return;
+  el.style.transition = "transform 220ms ease, filter 220ms ease";
+  el.style.transformOrigin = "center";
+
+  const on  = () => {
+    el.style.transform = "translateY(-14px) scale(1.04)";
+    el.style.filter = "drop-shadow(0 18px 18px rgba(0,0,0,.35))";
+  };
+  const off = () => {
+    el.style.transform = "translateY(0px) scale(1)";
+    el.style.filter = "none";
+  };
+
+  el.addEventListener("mouseenter", on);
+  el.addEventListener("mouseleave", off);
+
+  el.addEventListener("touchstart", on, {passive:true});
+  el.addEventListener("touchend", off);
+  el.addEventListener("touchcancel", off);
+
+  el.addEventListener("click", () => { on(); setTimeout(off, 250); });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // trike float
+  attachFloatTo($("trike") || document.querySelector(".logo"));
+
+  // buttons float
+  //document.querySelectorAll(".btn").forEach(attachFloatTo);
+
+  // wire modal + forms
+  boot();
+});
+
+// ---------- modal ----------
+function openModal(which){
+  if(!modal) return;
+
+  modal.classList.remove("hidden");
+  modal.setAttribute("aria-hidden", "false");
+  setMsg("");
+
+  if(which === "login"){
+    if(modalTitle) modalTitle.textContent = "Login";
+    show(loginPanel);
+    hide(registerPanel);
   } else {
-    commuterSection?.classList.remove("hidden");
-    driverSection?.classList.add("hidden");
-
-    // commuter required on
-    const homeZone = document.getElementById("homeZone");
-    const trustedName = document.getElementById("trustedName");
-    const trustedMobile = document.getElementById("trustedMobile");
-    const commuterPhoto = document.getElementById("commuterPhoto");
-    if (homeZone) homeZone.required = true;
-    if (trustedName) trustedName.required = true;
-    if (trustedMobile) trustedMobile.required = true;
-    if (commuterPhoto) commuterPhoto.required = true;
-
-    // driver required off
-    const driverAddress = document.getElementById("driverAddress");
-    if (driverAddress) driverAddress.required = false;
+    if(modalTitle) modalTitle.textContent = "Register";
+    show(registerPanel);
+    hide(loginPanel);
+    prepareRegister();
   }
 }
 
-userType?.addEventListener("change", syncTypeSections);
+function closeModal(){
+  if(!modal) return;
+  modal.classList.add("hidden");
+  modal.setAttribute("aria-hidden", "true");
+  setMsg("");
+}
 
-// OTP demo (front-end)
-document.getElementById("sendOtpBtn")?.addEventListener("click", () => {
-  currentOtp = String(Math.floor(100000 + Math.random() * 900000));
-  msg.textContent = `OTP sent (demo): ${currentOtp}`;
-});
+// ---------- register prep + required toggles ----------
+function syncTypeSections(){
+  const t = userType?.value || "commuter";
+  if(userTypeHidden) userTypeHidden.value = t; // hidden identification
 
-// -------------------------
-// REGISTER (PDS Submit)
-// -------------------------
-registerPanel?.addEventListener("submit", (e) => {
+  // Toggle display
+  if(t === "driver"){
+    show(driverSection);
+    hide(commuterSection);
+  }else{
+    show(commuterSection);
+    hide(driverSection);
+  }
+
+  // Commuter required fields ON only when commuter
+  setReq("homeZone",       t !== "driver");
+  setReq("trustedName",    t !== "driver");
+  setReq("trustedMobile",  t !== "driver");
+  setReq("commuterPhoto",  t !== "driver");
+
+  // Driver required fields ON only when driver
+  setReq("driverAddress",        t === "driver");
+  setReq("licensePhoto",         t === "driver");
+  setReq("licenseExpiryPhoto",   t === "driver");
+  setReq("licenseScan",          t === "driver");
+  setReq("mtopPhoto",            t === "driver");
+  setReq("lguBodyPhoto",         t === "driver");
+  setReq("todaCert",             t === "driver");
+  setReq("clearancePhoto",       t === "driver");
+  setReq("liveSelfie",           t === "driver");
+  setReq("driverEmergName",      t === "driver");
+  setReq("driverEmergMobile",    t === "driver");
+}
+
+function prepareRegister(){
+  // generate hidden unique id
+  if(uniqueIdEl) uniqueIdEl.value = genUniqueId();
+
+  // reset otp each time register opens
+  currentOtp = null;
+
+  // ensure sections + required correct
+  syncTypeSections();
+
+  // clear message
+  setMsg("Fill up the form. Tap “Send OTP” to continue.");
+}
+
+// ---------- OTP demo ----------
+function sendOtp(){
+  // (Demo) generate 6 digits
+  currentOtp = String(Math.floor(100000 + Math.random()*900000));
+  setMsg(`OTP sent (demo): ${currentOtp}`);
+}
+
+// ---------- main boot wiring ----------
+function boot(){
+  // connect open buttons
+  btnLogin?.addEventListener("click", () => openModal("login"));
+  btnRegister?.addEventListener("click", () => openModal("register"));
+
+  // close actions
+  closeModalBtn?.addEventListener("click", closeModal);
+  document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
+
+  // switch links inside forms
+  $("toRegister")?.addEventListener("click", () => openModal("register"));
+  $("toLogin")?.addEventListener("click", () => openModal("login"));
+
+  // user type change
+  userType?.addEventListener("change", syncTypeSections);
+
+  // send OTP
+  $("sendOtpBtn")?.addEventListener("click", sendOtp);
+
+  // form submits
+  loginPanel?.addEventListener("submit", onLoginSubmit);
+  registerPanel?.addEventListener("submit", onRegisterSubmit);
+}
+
+// ---------- REGISTER SUBMIT ----------
+function onRegisterSubmit(e){
   e.preventDefault();
-  msg.textContent = "";
+  setMsg("");
 
-  // Account fields
-  const contact = (document.getElementById("regContact")?.value || "").trim();
-  const email   = (document.getElementById("regEmail")?.value || "").trim();
+// Terms agreement check
+const agree = document.getElementById("agreeTC");
+if(agree && !agree.checked){
+  setMsg("You must agree to the Terms & Conditions.");
+  return;
+}
 
-  const pass1 = document.getElementById("regPass")?.value || "";
-  const pass2 = document.getElementById("regPass2")?.value || "";
-  if (pass1 !== pass2) { msg.textContent = "Passwords do not match."; return; }
+  // required fields
+  const contact = ($("regContact")?.value || "").trim();
+  const email   = ($("regEmail")?.value || "").trim();
 
-  // OTP check
-  const otp = (document.getElementById("regOtp")?.value || "").trim();
-  if (!currentOtp || otp !== currentOtp) { msg.textContent = "Invalid OTP."; return; }
+  const pass1 = $("regPass")?.value || "";
+  const pass2 = $("regPass2")?.value || "";
+  if(pass1 !== pass2){
+    setMsg("Passwords do not match.");
+    return;
+  }
+
+  const otp = ($("regOtp")?.value || "").trim();
+  if(!currentOtp){
+    setMsg("Please click “Send OTP” first.");
+    return;
+  }
+  if(otp !== currentOtp){
+    setMsg("Invalid OTP.");
+    return;
+  }
 
   // Common biodata
-  const lastName   = (document.getElementById("lastName")?.value || "").trim();
-  const firstName  = (document.getElementById("firstName")?.value || "").trim();
-  const middleName = (document.getElementById("middleName")?.value || "").trim();
+  const lastName   = ($("lastName")?.value || "").trim();
+  const firstName  = ($("firstName")?.value || "").trim();
+  const middleName = ($("middleName")?.value || "").trim();
+  const dob        = $("dob")?.value || "";
+  const civil      = $("civilStatus")?.value || "";
 
-  const dob         = document.getElementById("dob")?.value || "";
-  const civilStatus = document.getElementById("civilStatus")?.value || "";
-
-  // Type
-  const t = userType?.value || "commuter"; // driver/commuter
+  const t = userType?.value || "commuter";
 
   // Dedupe checks
   const users = getUsers();
-  if (email && users.some(u => (u.email || "").toLowerCase() === email.toLowerCase())) {
-    msg.textContent = "Email already registered.";
+  if(email && users.some(u => (u.email||"").toLowerCase() === email.toLowerCase())){
+    setMsg("Email already registered.");
     return;
   }
-  if (contact && users.some(u => u.contact === contact)) {
-    msg.textContent = "Contact number already registered.";
+  if(contact && users.some(u => (u.contact||"") === contact)){
+    setMsg("Contact number already registered.");
     return;
   }
 
-  // Base object
+  // Build base user
+  const uniqueId = uniqueIdEl?.value || genUniqueId();
+  const role = (t === "driver") ? "driver" : "passenger";
+
   const base = {
-    uniqueId: uniqueIdEl?.value || genUniqueId(), // hidden unique identification
-    identification: t,                            // hidden identification (driver/commuter)
-    fullName: { last: lastName, first: firstName, middle: middleName },
+    uniqueId,                 // hidden unique identification
+    identification: t,        // hidden identification (driver/commuter)
+    fullName: { last:lastName, first:firstName, middle:middleName },
     dob,
-    civilStatus,
+    civilStatus: civil,
     contact,
     email,
     password: pass1,
-    role: (t === "driver") ? "driver" : "passenger",
+    role,
     createdAt: Date.now()
   };
 
-  // PDS details
+  // PDS by type
   let pds = {};
-  if (t === "driver") {
+  if(t === "driver"){
     pds = {
-      permanentAddress: (document.getElementById("driverAddress")?.value || "").trim(),
+      permanentAddress: ($("driverAddress")?.value || "").trim(),
       emergency: {
-        name: (document.getElementById("driverEmergName")?.value || "").trim(),
-        mobile: (document.getElementById("driverEmergMobile")?.value || "").trim()
+        name: ($("driverEmergName")?.value || "").trim(),
+        mobile: ($("driverEmergMobile")?.value || "").trim()
       },
       files: {
-        licensePhoto: document.getElementById("licensePhoto")?.files?.[0]?.name || "",
-        licenseExpiryPhoto: document.getElementById("licenseExpiryPhoto")?.files?.[0]?.name || "",
-        licenseScanCount: document.getElementById("licenseScan")?.files?.length || 0,
-        mtopPhoto: document.getElementById("mtopPhoto")?.files?.[0]?.name || "",
-        lguBodyPhoto: document.getElementById("lguBodyPhoto")?.files?.[0]?.name || "",
-        todaCert: document.getElementById("todaCert")?.files?.[0]?.name || "",
-        clearancePhoto: document.getElementById("clearancePhoto")?.files?.[0]?.name || "",
-        liveSelfie: document.getElementById("liveSelfie")?.files?.[0]?.name || ""
+        licensePhoto: $("licensePhoto")?.files?.[0]?.name || "",
+        licenseExpiryPhoto: $("licenseExpiryPhoto")?.files?.[0]?.name || "",
+        licenseScanCount: $("licenseScan")?.files?.length || 0,
+        mtopPhoto: $("mtopPhoto")?.files?.[0]?.name || "",
+        lguBodyPhoto: $("lguBodyPhoto")?.files?.[0]?.name || "",
+        todaCert: $("todaCert")?.files?.[0]?.name || "",
+        clearancePhoto: $("clearancePhoto")?.files?.[0]?.name || "",
+        liveSelfie: $("liveSelfie")?.files?.[0]?.name || ""
       }
     };
   } else {
     pds = {
-      homeZone: (document.getElementById("homeZone")?.value || "").trim(),
+      homeZone: ($("homeZone")?.value || "").trim(),
       trustedContact: {
-        name: (document.getElementById("trustedName")?.value || "").trim(),
-        mobile: (document.getElementById("trustedMobile")?.value || "").trim()
+        name: ($("trustedName")?.value || "").trim(),
+        mobile: ($("trustedMobile")?.value || "").trim()
       },
       files: {
-        commuterPhoto: document.getElementById("commuterPhoto")?.files?.[0]?.name || ""
+        commuterPhoto: $("commuterPhoto")?.files?.[0]?.name || ""
       }
     };
   }
 
-  // Save user
   users.push({ ...base, pds });
   setUsers(users);
 
-  // Auto-login
-  const displayName = `${firstName} ${lastName}`.trim();
-  setSession({ username: displayName || email || contact || "User", role: base.role, uniqueId: base.uniqueId, ts: Date.now() });
-  redirectByRole(base.role);
-});
+  // Auto login -> homepage
+  const displayName = `${firstName} ${lastName}`.trim() || email || contact || "User";
+  setSession({ username: displayName, role, uniqueId, ts: Date.now() });
+  redirectHome();
+}
 
-// -------------------------
-// LOGIN (by Contact or Email)
-// -------------------------
-loginPanel?.addEventListener("submit", (e) => {
+// ---------- LOGIN SUBMIT ----------
+function onLoginSubmit(e){
   e.preventDefault();
-  msg.textContent = "";
+  setMsg("");
 
-  const loginUser = (document.getElementById("loginUser")?.value || "").trim(); // email or contact
-  const loginPass = document.getElementById("loginPass")?.value || "";
+  // loginUser can be email OR contact
+  const loginUser = ($("loginUser")?.value || "").trim();
+  const loginPass = $("loginPass")?.value || "";
 
   const users = getUsers();
-
-  // Find by email or contact (more realistic than "username")
   const found = users.find(u =>
-    (u.email && u.email.toLowerCase() === loginUser.toLowerCase()) ||
-    (u.contact && u.contact === loginUser)
+    ((u.email||"").toLowerCase() === loginUser.toLowerCase()) ||
+    ((u.contact||"") === loginUser)
   );
 
-  if (!found || found.password !== loginPass) {
-    msg.textContent = "Invalid email/contact or password.";
+  if(!found || found.password !== loginPass){
+    setMsg("Invalid email/contact or password.");
     return;
   }
 
-  const displayName = `${found.fullName?.first || ""} ${found.fullName?.last || ""}`.trim() || found.email || found.contact || "User";
-  setSession({ username: displayName, role: found.role, uniqueId: found.uniqueId, ts: Date.now() });
-  redirectByRole(found.role);
-});
+  const displayName =
+    `${found.fullName?.first || ""} ${found.fullName?.last || ""}`.trim()
+    || found.email || found.contact || "User";
 
+  setSession({ username: displayName, role: found.role, uniqueId: found.uniqueId, ts: Date.now() });
+  redirectHome();
+}
+
+// ===== Terms & Conditions modal =====
+const openTC  = document.getElementById("openTC");
+const tcModal = document.getElementById("tcModal");
+const closeTC = document.getElementById("closeTC");
+
+function showTC(){
+  tcModal?.classList.remove("hidden");
+  tcModal?.setAttribute("aria-hidden", "false");
+
+  const body = tcModal?.querySelector(".tcBody");
+  if(body) body.scrollTop = 0;
+}
+function hideTC(){
+  tcModal?.classList.add("hidden");
+  tcModal?.setAttribute("aria-hidden", "true");
+}
+
+openTC?.addEventListener("click", showTC);
+closeTC?.addEventListener("click", hideTC);
