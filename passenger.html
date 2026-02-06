@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>E-TODA • Passenger</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="passenger.css"/>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="iconBtn" id="backBtn" aria-label="Back">←</button>
+
+  <div class="brand">
+    <div class="title">Passenger</div>
+    <div class="sub" id="gpsStatus">Waiting for GPS…</div>
+  </div>
+
+  <button class="btn" id="centerBtn">Center</button>
+</header>
+
+<main class="wrap">
+
+  <section class="card">
+    <div class="row2">
+      <div>
+        <div class="label">Mode</div>
+        <div class="seg">
+          <button class="segBtn active" id="modePickup" type="button">Pick-up</button>
+          <button class="segBtn" id="modeDest" type="button">Destination</button>
+        </div>
+        <div class="hint">Tap the map to drop a pin.</div>
+      </div>
+
+      <div>
+        <div class="label">Controls</div>
+        <div class="btnRow">
+          <button class="btn primary" id="startBtn" type="button">Start GPS</button>
+          <button class="btn danger" id="stopBtn" type="button" disabled>Stop</button>
+          <button class="btn" id="clearBtn" type="button">Clear Pins</button>
+        </div>
+        <div class="tiny" id="gpsAcc">Accuracy: —</div>
+      </div>
+    </div>
+
+    <div class="row3">
+      <div class="infoPill">
+        <span>Pick-up</span>
+        <strong id="pickupText">Not set</strong>
+      </div>
+      <div class="infoPill">
+        <span>Destination</span>
+        <strong id="destText">Not set</strong>
+      </div>
+      <div class="infoPill">
+        <span>Tricycles Nearby</span>
+        <strong id="trikeCount">0</strong>
+      </div>
+    </div>
+
+    <div class="sosRow">
+      <button class="btn warn" id="sosBtn" type="button">SOS • Share Location</button>
+      <div class="tiny" id="trustedText">Trusted contact: —</div>
+    </div>
+  </section>
+
+  <section class="card mapCard">
+    <div id="map" class="map"></div>
+    <div class="mapHint">Tip: Tap map to set Pick-up and Destination pins.</div>
+  </section>
+
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="passenger.js"></script>
+</body>
+</html>
