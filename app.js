@@ -3,6 +3,11 @@
 // Login + PDS Register + OTP + Safe Required Toggles
 // =========================
 
+function redirectHome(){
+  window.location.href = "home.html";
+}
+
+
 // ===== Block access to login/register if already logged in =====
 (function(){
 

@@ -1,7 +1,105 @@
+/* =========================
+   MOBILE FRIENDLY HOMEPAGE
+   ========================= */
+
+/* Prevent overflow */
+.topbar, .wrap { max-width: 100%; }
+body { overflow-x: hidden; }
+
+/* Better touch targets */
+.btn, .acctItem, .acctBtn {
+  min-height: 44px; /* standard mobile tap size */
+}
+
+/* Header layout on smaller screens */
+@media (max-width: 860px){
+.topbar{
+  display: flex;
+  align-items: center;          /* 👈 FORCE vertical centering */
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.acctWrap{
+  display: flex;
+  align-items: center;          /* 👈 center avatar vertically */
+  margin-left: auto;
+}
+
+
+
+  .brand{
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .brandText{
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Info boxes become a 2-column grid */
+  .topInfo{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    justify-items: stretch;
+  }
+
+  /* Make "Role" full width (nice layout) */
+  .topInfo .infoBox:last-child{
+    grid-column: 1 / -1;
+  }
+
+  /* Put account button on the right of the brand row */
+  .acctWrap{
+    margin-left: auto;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px){
+  .brandLogo{
+    width: 40px;
+    height: 40px;
+  }
+
+  .brandTitle{
+    font-size: 1rem;
+  }
+  .brandSub{
+    font-size: .8rem;
+  }
+
+  .infoBox{
+    min-width: 0;           /* allow shrink */
+    padding: 8px 10px;
+  }
+  .infoBox strong{
+    font-size: .9rem;
+  }
+
+  .wrap{
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .card{
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  /* Buttons stack */
+  .grid{
+    grid-template-columns: 1fr;
+  }
+}
+
 :root{
   --bg1:#1e2c5b;
   --bg2:#0d6a72;
-  --panel: rgba(12,27,42,.72);
+  --panel: rgba(12,27,42,.78);
   --stroke: rgba(255,255,255,.14);
   --text:#fff;
   --muted: rgba(255,255,255,.82);
@@ -20,67 +118,86 @@ body{
   min-height:100vh;
 }
 
+/* Header */
 .topbar{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  padding:14px 18px;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
   border-bottom:1px solid var(--stroke);
   background: rgba(0,0,0,.12);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:10px;
+  min-width: 220px;
 }
 
 .brandLogo{
-  width:46px;
-  height:46px;
+  width:44px;
+  height:44px;
   border-radius:10px;
   background: rgba(255,255,255,.08);
   padding:6px;
 }
 
-.brandTitle{ font-weight:700; letter-spacing:1px; }
+.brandTitle{ font-weight:800; letter-spacing:1px; }
 .brandSub{ font-size:.85rem; opacity:.85; }
 
+/* Header Info */
+.topInfo{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.infoBox{
+  background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:6px 12px;
+  border-radius:10px;
+  min-width: 120px;
+  text-align:left;
+}
+
+.infoBox span{
+  display:block;
+  font-size:.72rem;
+  opacity:.75;
+}
+
+.infoBox strong{
+  display:block;
+  font-size:.95rem;
+  letter-spacing:.3px;
+}
+
+/* Page */
 .wrap{
-  max-width:980px;
-  margin:0 auto;
-  padding:18px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 16px;
   display:grid;
   gap:14px;
 }
 
 .card{
   background: var(--panel);
-  border:1px solid var(--stroke);
-  border-radius:16px;
-  padding:18px;
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 16px;
 }
 
-.hero h1{ margin:0 0 6px; }
-.muted{ color:var(--muted); margin:0; }
+.hero h1{ margin: 0 0 6px; font-size: 1.6rem; }
+.muted{ color: var(--muted); margin: 0; }
 
-.stats{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:12px;
-  margin-top:12px;
-}
-
-.stat{
-  border:1px solid var(--stroke);
-  border-radius:14px;
-  padding:12px;
-  background: rgba(255,255,255,.05);
-}
-.statLabel{ font-size:.85rem; opacity:.85; }
-.statValue{ font-size:1.05rem; font-weight:700; margin-top:4px; }
-
+/* Buttons */
 .grid{
   display:grid;
   grid-template-columns: repeat(3, 1fr);
@@ -98,42 +215,308 @@ body{
   background: rgba(255,255,255,.10);
   transition: transform .15s ease, filter .15s ease;
 }
-.btn:hover{ transform: translateY(-2px); filter: brightness(1.05); }
-.btn:active{ transform: translateY(1px); }
 
-.btn.primary{ background: var(--primary); color:#00121a; font-weight:700; }
+.btn:hover{ transform: translateY(-2px); filter: brightness(1.05); }
+.btn:active{ transform: translateY(1px); filter:none; }
+
+.btn.primary{
+  background: var(--primary);
+  color:#00121a;
+  font-weight:800;
+}
+
 .btn.danger{ background: var(--danger); }
 
 .hidden{ display:none !important; }
 
-@media (max-width:720px){
-  .stats{ grid-template-columns: 1fr; }
+/* Mobile */
+@media (max-width: 860px){
+  .topbar{ flex-wrap:wrap; }
+  .brand{ width:100%; justify-content:center; }
   .grid{ grid-template-columns: 1fr; }
 }
 
-/* Header user info */
-.topInfo{
+/* ===== Account dropdown (right side menustrip) ===== */
+.acctWrap{ position:relative; }
+
+.acctBtn{
+  background: transparent;   /* REMOVE circle background */
+  border: none;              /* REMOVE ring */
+  padding: 0;
+  box-shadow: none;
+
   display:flex;
-  gap:14px;
   align-items:center;
+  justify-content:center;
+
+  width:auto;
+  height:auto;
 }
 
-.infoBox{
+
+.acctAvatar{
+  width:36px; height:36px;
+  border-radius:999px;
+  object-fit:cover;
+}
+
+.acctMenu{
+  position:absolute;
+  right:0;
+  top:54px;
+  width:min(340px, 92vw);
+  background: rgba(16, 24, 36, .92);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;
+  padding:12px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+  z-index:999;
+}
+
+.acctHeader{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:6px;
+}
+
+.menuAvatar{
+  width:48px; height:48px;
+  border-radius:999px;
+  object-fit:cover;
   background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
-  padding:6px 12px;
-  border-radius:10px;
+}
+
+.acctText{ min-width:0; }
+.acctName{
+  font-weight:800;
+  font-size:1rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.acctSub{
+  font-size:.85rem;
+  opacity:.8;
+  margin-top:2px;
+}
+
+.acctDivider{
+  height:1px;
+  background: rgba(255,255,255,.12);
+  margin:10px 0;
+}
+
+.acctItem{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 10px;
+  border:none;
+  border-radius:12px;
+  background: transparent;
+  color:#fff;
+  cursor:pointer;
   text-align:left;
-  min-width:120px;
+  font-size:.95rem;
 }
 
-.infoBox span{
-  font-size:.7rem;
-  opacity:.75;
-  display:block;
+.acctItem:hover{
+  background: rgba(255,255,255,.08);
 }
 
-.infoBox strong{
-  font-size:.9rem;
-  letter-spacing:.5px;
+.acctIcon{
+  width:26px;
+  display:inline-flex;
+  justify-content:center;
+  opacity:.9;
+}
+
+.acctItem.danger{
+  color:#ffb3b3;
+}
+.acctItem.danger:hover{
+  background: rgba(255, 77, 77, .12);
+}
+
+.hidden{ display:none !important; }
+
+/* Avatar base */
+.letterAvatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-weight:700;
+  font-size:1rem;
+  color:white;
+
+  background: linear-gradient(135deg,#ff9800,#ff6a00);
+
+  /* CLEAN single ring */
+  border:2px solid rgba(255,255,255,.15);
+
+  /* Soft shadow (not double) */
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+
+  line-height:1;
+  padding:0;
+}
+
+.letterAvatar.large{
+  width:52px;
+  height:52px;
+  font-size:1.25rem;
+}
+
+
+/* Bigger version inside menu */
+.letterAvatar.large{
+  width:52px;
+  height:52px;
+  font-size:1.3rem;
+}
+
+/* =========================
+   MOBILE FIX (paste at bottom)
+   ========================= */
+@media (max-width: 600px){
+
+  /* tighten header height */
+  .topbar{
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .brand{
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .brandLogo{
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+  }
+
+  .brandText{
+    min-width: 0;
+  }
+
+  .brandTitle{
+    font-size: 1.05rem;
+    line-height: 1.1;
+  }
+
+  .brandSub{
+    font-size: .85rem;
+    line-height: 1.1;
+  }
+
+  /* keep avatar aligned right */
+  .acctWrap{
+    margin-left: auto;
+  }
+
+  .acctBtn{
+    width: 42px;
+    height: 42px;
+  }
+
+  .letterAvatar{
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  /* page padding */
+  .wrap{
+    padding: 12px;
+    gap: 12px;
+  }
+
+  /* cards: less padding + full width */
+  .card{
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  /* passenger/driver/admin panel spacing */
+  #passengerPanel h2,
+  #driverPanel h2,
+  #adminPanel h2{
+    font-size: 1.35rem;
+    margin: 0 0 6px;
+  }
+
+  /* buttons: consistent size and spacing */
+  .grid{
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .btn{
+    width: 100%;
+    padding: 14px 14px;
+    border-radius: 14px;
+    font-size: 1rem;
+  }
+
+  /* remove hover lift on mobile (prevents weird jumps) */
+  .btn:hover{
+    transform: none;
+    filter: none;
+  }
+
+  /* dropdown menu fits screen */
+  .acctMenu{
+    width: min(360px, 94vw);
+    right: 0;
+    top: 52px;
+  }
+
+  .acctItem{
+    padding: 12px 12px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px){
+
+  .topbar{
+    flex-wrap: nowrap;          /* 👈 stop header from breaking */
+  }
+
+  .brand{
+    flex: 1;
+    min-width: 0;
+  }
+
+  .acctWrap{
+    flex-shrink: 0;             /* 👈 prevents dropping */
+  }
+
+  .acctBtn{
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .letterAvatar{
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
 }

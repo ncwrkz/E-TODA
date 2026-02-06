@@ -8,55 +8,91 @@
 </head>
 <body>
 
-  <header class="topbar">
-    <div class="topInfo">
-  <div class="infoBox">
-    <span>Name</span>
-    <strong id="whoami">—</strong>
+<header class="topbar">
+  <div class="brand">
+    <img class="brandLogo" src="logo.png" alt="E-TODA" />
+    <div class="brandText">
+      <div class="brandTitle">E-TODA</div>
+      <div class="brandSub">Web Based Tricycle Booking</div>
+    </div>
+  </div>
+
+  <div class="acctWrap">
+  <button id="acctBtn" class="acctBtn" aria-haspopup="menu" aria-expanded="false" title="Account">
+    <div id="acctAvatar" class="letterAvatar"></div>
+  </button>
+
+  <div id="acctMenu" class="acctMenu hidden" role="menu">
+    <div class="acctHeader">
+      <div id="menuAvatar" class="letterAvatar large"></div>
+      <div class="acctText">
+        <div id="menuName" class="acctName">—</div>
+        <div class="acctSub">
+          <span id="menuId">—</span>
+        </div>
+        <div class="acctSub">
+          <span id="menuRole">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="acctDivider"></div>
+
+    <button class="acctItem" role="menuitem" data-go="home.html">
+      <span class="acctIcon">🏠</span> Home
+    </button>
+    <button class="acctItem" role="menuitem" data-go="settings.html">
+      <span class="acctIcon">⚙️</span> Settings & privacy
+    </button>
+    <button class="acctItem" role="menuitem" data-go="help.html">
+      <span class="acctIcon">❓</span> Help & support
+    </button>
+    <div class="acctDivider"></div>
+
+    <button id="logoutBtn" class="acctItem danger" role="menuitem">
+      <span class="acctIcon">⎋</span> Log out
+    </button>
   </div>
 </div>
 
-    <button id="logoutBtn" class="btn danger">Logout</button>
-  </header>
+</header>
 
-  <main class="wrap">
-    <section class="card hero">
-      <h1 id="welcomeText">Welcome</h1>
-      <p id="whoami" class="muted"></p>
-    </section>
+<main class="wrap">
+  <!-- Passenger -->
+  <section id="passengerPanel" class="card hidden">
+    <h2>Passenger</h2>
+    <p class="muted">Book rides and manage your activity.</p>
+    <div class="grid">
+      <button class="btn primary" data-go="passenger.html">Book a Ride</button>
+      <button class="btn" data-go="bookings.html">My Bookings</button>
+      <button class="btn" data-go="reviews.html">My Reviews</button>
+    </div>
+  </section>
 
-    <!-- Passenger -->
-    <section id="passengerPanel" class="card hidden">
-      <h2>Passenger Actions</h2>
-      <div class="grid">
-        <button class="btn primary" onclick="go('passenger.html')">Book a Ride</button>
-        <button class="btn" onclick="go('bookings.html')">My Bookings</button>
-        <button class="btn" onclick="go('reviews.html')">My Reviews</button>
-      </div>
-    </section>
+  <!-- Driver -->
+  <section id="driverPanel" class="card hidden">
+    <h2>Driver</h2>
+    <p class="muted">View trips, status, and verification details.</p>
+    <div class="grid">
+      <button class="btn primary" data-go="driver.html">Driver Dashboard</button>
+      <button class="btn" data-go="driver-trips.html">Trips</button>
+      <button class="btn" data-go="driver-profile.html">My PDS Profile</button>
+    </div>
+  </section>
 
-    <!-- Driver -->
-    <section id="driverPanel" class="card hidden">
-      <h2>Driver Actions</h2>
-      <div class="grid">
-        <button class="btn primary" onclick="go('driver.html')">Open Driver Dashboard</button>
-        <button class="btn" onclick="go('driver-trips.html')">Trips</button>
-        <button class="btn" onclick="go('driver-profile.html')">My PDS Profile</button>
-      </div>
-    </section>
+  <!-- Admin -->
+  <section id="adminPanel" class="card hidden">
+    <h2>Admin</h2>
+    <p class="muted">Manage users and review reports.</p>
+    <div class="grid">
+      <button class="btn primary" data-go="admin.html">Admin Panel</button>
+      <button class="btn" data-go="users.html">Manage Users</button>
+      <button class="btn" data-go="reports.html">Reports</button>
+    </div>
+  </section>
 
-    <!-- Admin -->
-    <section id="adminPanel" class="card hidden">
-      <h2>Admin Actions</h2>
-      <div class="grid">
-        <button class="btn primary" onclick="go('admin.html')">Open Admin Panel</button>
-        <button class="btn" onclick="go('users.html')">Manage Users</button>
-        <button class="btn" onclick="go('reports.html')">Reports</button>
-      </div>
-    </section>
+</main>
 
-  </main>
-
-  <script src="home.js"></script>
+<script src="home.js"></script>
 </body>
 </html>
