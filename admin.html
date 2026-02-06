@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>E-TODA Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="logoCircle letterAvatar">A</div>
+      <div class="brandText">
+        <div class="brandTitle">E-TODA Admin</div>
+        <div class="brandSub">User management & driver approvals</div>
+      </div>
+    </div>
+
+    <div class="acct">
+      <button id="acctBtn" class="acctBtn" aria-expanded="false">
+        <span class="avatar letterAvatar">A</span>
+        <span class="acctName" id="headerName">Admin</span>
+        <span class="chev">▾</span>
+      </button>
+
+      <div id="acctMenu" class="acctMenu hidden">
+        <div class="menuTop">
+          <div class="avatarBig letterAvatar">A</div>
+          <div class="menuInfo">
+            <div class="menuName" id="menuName">Admin</div>
+            <div class="menuMeta">
+              <span id="menuRole">ADMIN</span> • <span id="menuId">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menuBtns">
+          <button class="menuItem" id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="wrap">
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="statCard">
+        <div class="statNum" id="statTotal">0</div>
+        <div class="statLabel">Total Users</div>
+      </div>
+      <div class="statCard">
+        <div class="statNum" id="statPassengers">0</div>
+        <div class="statLabel">Passengers</div>
+      </div>
+      <div class="statCard">
+        <div class="statNum" id="statDrivers">0</div>
+        <div class="statLabel">Drivers</div>
+      </div>
+      <div class="statCard">
+        <div class="statNum" id="statPending">0</div>
+        <div class="statLabel">Driver Pending</div>
+      </div>
+    </section>
+
+    <!-- Pending approvals -->
+    <section class="panel">
+      <div class="panelTop">
+        <h2>Driver Approval Requests</h2>
+        <div class="panelHint">Approve or reject driver registrations</div>
+      </div>
+
+      <div id="pendingEmpty" class="empty">No pending drivers.</div>
+      <div id="pendingList" class="list"></div>
+    </section>
+
+    <!-- Users -->
+    <section class="panel">
+      <div class="panelTop row">
+        <div>
+          <h2>All Users</h2>
+          <div class="panelHint">Search, filter, then Manage</div>
+        </div>
+
+        <div class="tools">
+          <input id="searchInput" class="input" placeholder="Search name / email / contact / ID" />
+          <select id="filterRole" class="input">
+            <option value="all">All</option>
+            <option value="passenger">Passenger</option>
+            <option value="driver">Driver</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button id="refreshBtn" class="btn">Refresh</button>
+        </div>
+      </div>
+
+      <div id="userEmpty" class="empty hidden">No users found.</div>
+
+      <div id="userTable" class="table"></div>
+    </section>
+
+  </main>
+
+  <!-- Manage Modal -->
+  <div id="manageModal" class="modal hidden" aria-hidden="true">
+    <div class="modalCard">
+      <div class="modalTop">
+        <div class="modalTitle">Manage User</div>
+        <button id="closeManage" class="xBtn">✕</button>
+      </div>
+
+      <div class="manageHeader">
+        <div id="mAvatar" class="avatarBig letterAvatar">U</div>
+        <div class="manageInfo">
+          <div id="mName" class="mName">—</div>
+          <div class="mMeta">
+            <span id="mRole" class="pill">—</span>
+            <span id="mStatus" class="pill ok">—</span>
+          </div>
+          <div class="mMeta2">
+            <b>ID:</b> <span id="mId">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="box">
+          <div class="boxTitle">Profile</div>
+
+          <label class="field">
+            <span>Email</span>
+            <input id="editEmail" class="input" />
+          </label>
+
+          <label class="field">
+            <span>Contact</span>
+            <input id="editContact" class="input" />
+          </label>
+
+          <button id="btnSaveProfile" class="btn primary">Save Profile</button>
+        </div>
+
+        <div class="box">
+          <div class="boxTitle">Password</div>
+
+          <label class="field">
+            <span>New Password</span>
+            <input id="editPassword" class="input" type="password" />
+          </label>
+
+          <button id="btnSavePassword" class="btn primary">Save Password</button>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="boxTitle">Driver Approval</div>
+        <div class="rowBtns">
+          <button id="btnApproveDriver" class="btn ok">Approve Driver</button>
+          <button id="btnRejectDriver" class="btn warn">Reject Driver</button>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="boxTitle">Account Actions</div>
+        <div class="rowBtns">
+          <button id="btnRevoke" class="btn warn">Revoke / Disable</button>
+          <button id="btnDelete" class="btn danger">Delete</button>
+          <button id="btnBackup" class="btn">Backup JSON</button>
+          <button id="btnPreviewDocs" class="btn">Document Preview</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Docs Modal -->
+  <div id="docModal" class="modal hidden" aria-hidden="true">
+    <div class="modalCard">
+      <div class="modalTop">
+        <div class="modalTitle">Documents</div>
+        <button id="closeDoc" class="xBtn">✕</button>
+      </div>
+
+      <div class="docOwner" id="docOwner">—</div>
+      <div id="docEmpty" class="empty hidden">No documents saved.</div>
+      <div id="docList" class="docList"></div>
+    </div>
+  </div>
+
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="modal hidden" aria-hidden="true">
+    <div class="modalCard small">
+      <div class="modalTop">
+        <div class="modalTitle">Logout?</div>
+        <button id="closeLogout" class="xBtn">✕</button>
+      </div>
+      <p class="muted">Are you sure you want to logout?</p>
+      <div class="rowBtns">
+        <button id="cancelLogout" class="btn">Cancel</button>
+        <button id="confirmLogout" class="btn danger">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

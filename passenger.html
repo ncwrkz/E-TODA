@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>E-TODA • Passenger</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -11,64 +11,122 @@
 <body>
 
 <header class="topbar">
-  <button class="iconBtn" id="backBtn" aria-label="Back">←</button>
+  <button id="backBtn" class="iconBtn" aria-label="Back">←</button>
 
   <div class="brand">
-    <div class="title">Passenger</div>
-    <div class="sub" id="gpsStatus">Waiting for GPS…</div>
+    <div class="title">Passenger Panel</div>
+    <div id="gpsStatus" class="sub">Ready</div>
+    <div id="gpsAcc" class="sub2">Accuracy: —</div>
   </div>
 
-  <button class="btn" id="centerBtn">Center</button>
+  <button id="centerBtn" class="btn">Center</button>
 </header>
 
 <main class="wrap">
 
+  <!-- LOCATION / ROUTE -->
   <section class="card">
-    <div class="row2">
+    <div class="grid2">
       <div>
-        <div class="label">Mode</div>
-        <div class="seg">
-          <button class="segBtn active" id="modePickup" type="button">Pick-up</button>
-          <button class="segBtn" id="modeDest" type="button">Destination</button>
-        </div>
-        <div class="hint">Tap the map to drop a pin.</div>
+        <label class="lbl">Municipality</label>
+        <select id="muniSelect" class="input"></select>
+      </div>
+
+      <div class="trikeBox">
+        <div class="lbl">Nearby Tricycles</div>
+        <div class="big" id="trikeCount">0</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label class="lbl">Pick-up (Landmark)</label>
+        <select id="pickupSelect" class="input"></select>
+        <div class="tiny">Nearest: <b id="pickupNearest">—</b></div>
       </div>
 
       <div>
-        <div class="label">Controls</div>
-        <div class="btnRow">
-          <button class="btn primary" id="startBtn" type="button">Start GPS</button>
-          <button class="btn danger" id="stopBtn" type="button" disabled>Stop</button>
-          <button class="btn" id="clearBtn" type="button">Clear Pins</button>
-        </div>
-        <div class="tiny" id="gpsAcc">Accuracy: —</div>
+        <label class="lbl">Destination (Landmark)</label>
+        <select id="destSelect" class="input"></select>
+        <div class="tiny">Nearest: <b id="destNearest">—</b></div>
       </div>
     </div>
 
-    <div class="row3">
-      <div class="infoPill">
-        <span>Pick-up</span>
-        <strong id="pickupText">Not set</strong>
-      </div>
-      <div class="infoPill">
-        <span>Destination</span>
-        <strong id="destText">Not set</strong>
-      </div>
-      <div class="infoPill">
-        <span>Tricycles Nearby</span>
-        <strong id="trikeCount">0</strong>
-      </div>
+    <div class="pillRow">
+      <div class="pill">Pickup: <b id="pickupText">Not set</b></div>
+      <div class="pill">Dest: <b id="destText">Not set</b></div>
+      <div class="pill">Fare: <b id="fareText">—</b></div>
     </div>
 
-    <div class="sosRow">
-      <button class="btn warn" id="sosBtn" type="button">SOS • Share Location</button>
-      <div class="tiny" id="trustedText">Trusted contact: —</div>
+    <div class="btnRow">
+      <button id="startBtn" class="btn primary" type="button">Start GPS</button>
+      <button id="stopBtn" class="btn danger" type="button" disabled>Stop</button>
+      <button id="clearBtn" class="btn" type="button">Clear</button>
+      <button id="sosBtn" class="btn warn" type="button">SOS • Share</button>
     </div>
+
+    <div class="tiny" id="trustedText">Trusted contact: —</div>
   </section>
 
+  <!-- BOOKING (Angkas/JoyRide style) -->
+  <section class="card">
+    <div class="row space">
+      <h3 class="h3">Booking</h3>
+      <span class="badge" id="bookStatus">NO BOOKING</span>
+    </div>
+
+    <div class="grid3">
+      <div class="info">
+        <div class="lbl">Driver</div>
+        <div class="big" id="bookDriver">—</div>
+      </div>
+      <div class="info">
+        <div class="lbl">ETA</div>
+        <div class="big" id="bookEta">—</div>
+      </div>
+      <div class="info">
+        <div class="lbl">Fare</div>
+        <div class="big" id="bookFare">—</div>
+      </div>
+    </div>
+
+    <div class="btnRow">
+      <button id="requestRideBtn" class="btn primary" type="button">Request Ride</button>
+      <button id="cancelRideBtn" class="btn danger" type="button" disabled>Cancel</button>
+      <button id="startTripBtn" class="btn" type="button" disabled>Start Trip</button>
+      <button id="completeTripBtn" class="btn" type="button" disabled>Complete</button>
+    </div>
+
+    <div class="tiny" id="bookMsg">Set Pick-up & Destination first.</div>
+  </section>
+
+  <!-- MAP -->
   <section class="card mapCard">
-    <div id="map" class="map"></div>
-    <div class="mapHint">Tip: Tap map to set Pick-up and Destination pins.</div>
+    <div id="map"></div>
+    <div class="tiny hint">Tip: Tap the map to set Pick-up then Destination.</div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="card">
+    <div class="row space">
+      <h3 class="h3">Reviews</h3>
+      <span class="badge" id="reviewCount">0</span>
+    </div>
+
+    <div class="reviewForm">
+      <select id="reviewStars" class="input">
+        <option value="5">★★★★★ (5)</option>
+        <option value="4">★★★★☆ (4)</option>
+        <option value="3">★★★☆☆ (3)</option>
+        <option value="2">★★☆☆☆ (2)</option>
+        <option value="1">★☆☆☆☆ (1)</option>
+      </select>
+
+      <input id="reviewText" class="input" placeholder="Write your review..." />
+      <button id="addReviewBtn" class="btn primary" type="button">Post</button>
+    </div>
+
+    <div id="reviewList" class="reviewList"></div>
   </section>
 
 </main>

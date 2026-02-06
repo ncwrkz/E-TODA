@@ -1,98 +1,92 @@
 // =========================
-// E-TODA Start.js (FIXED ALL-IN-ONE)
-// Login + PDS Register + OTP + Safe Required Toggles
+// app.js (E-TODA Start) - FULL WORKING
+// Login + Register(PDS) + OTP + Terms + Driver Approval + Admin UPSERT
 // =========================
-
-function redirectHome(){
-  window.location.href = "home.html";
-}
-
-
-// ===== Block access to login/register if already logged in =====
-(function(){
-
-  const SESSION_KEY = "esakay_session_v1";
-
-  try{
-    const sess = JSON.parse(localStorage.getItem(SESSION_KEY));
-
-    if(sess){
-      // Already logged in → send to homepage
-      window.location.href = "home.html";
-    }
-
-  }catch(e){
-    console.error("Session check failed", e);
-  }
-
-})();
-
 
 const SESSION_KEY = "esakay_session_v1";
 const USERS_KEY   = "esakay_users_v1";
 
-// ---------- helpers ----------
 const $ = (id) => document.getElementById(id);
 
-function safeJSONParse(v, fallback) {
+// ---------- helpers ----------
+function safeJSONParse(v, fallback){
   try { return JSON.parse(v); } catch { return fallback; }
 }
-
-function getUsers(){
-  return safeJSONParse(localStorage.getItem(USERS_KEY) || "[]", []);
+function getSession(){
+  return safeJSONParse(localStorage.getItem(SESSION_KEY) || "null", null);
 }
-
-function setUsers(users){
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
 function setSession(sess){
   localStorage.setItem(SESSION_KEY, JSON.stringify(sess));
 }
-
-function redirectHome(){
-  window.location.href = "home.html";
+function getUsers(){
+  return safeJSONParse(localStorage.getItem(USERS_KEY) || "[]", []);
 }
-
+function setUsers(users){
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
 function genUniqueId(){
   return "ETODA-" + Date.now().toString(36).toUpperCase() + "-" + Math.floor(Math.random()*9999);
 }
-
+function show(el){ if(el) el.classList.remove("hidden"); }
+function hide(el){ if(el) el.classList.add("hidden"); }
 function setReq(id, required){
   const el = $(id);
   if(el) el.required = !!required;
 }
-
-function show(el){ if(el) el.classList.remove("hidden"); }
-function hide(el){ if(el) el.classList.add("hidden"); }
-
 function setMsg(text){
   const m = $("msg");
   if(m) m.textContent = text || "";
 }
+function buildDisplayName(u){
+  const full = `${u?.fullName?.first || ""} ${u?.fullName?.last || ""}`.trim();
+  return full || u?.email || u?.contact || u?.username || "User";
+}
+function redirectHome(role){
+  const r = String(role || "").toLowerCase();
+  if(r === "admin") return (window.location.href = "admin.html");
+  if(r === "driver") return (window.location.href = "driver.html");
+  return (window.location.href = "home.html"); // passenger default
+}
 
-// ---------- elements ----------
-const modal         = $("modal");
-const modalTitle    = $("modalTitle");
-const closeModalBtn = $("closeModal");
+// ---------- ADMIN UPSERT (create OR fix existing) ----------
+function ensureAdminAccount(){
+  const users = getUsers();
+  const ADMIN_EMAIL = "admin@etoda";
+  const ADMIN_PASS  = "admin123";
 
-const loginPanel    = $("loginPanel");
-const registerPanel = $("registerPanel");
+  let admin = users.find(u => (u.email || "").toLowerCase() === ADMIN_EMAIL);
 
-const btnLogin      = $("btnLogin");     // Continue
-const btnRegister   = $("btnRegister");  // Get Started
+  if(!admin){
+    admin = {
+      uniqueId: "ETODA-ADMIN-0001",
+      identification: "admin",
+      fullName: { last:"Admin", first:"System", middle:"" },
+      dob: "",
+      civilStatus: "",
+      contact: "0000000000",
+      email: ADMIN_EMAIL,
+      password: ADMIN_PASS,
+      role: "admin",
+      isActive: true,
+      createdAt: Date.now(),
+      driverStatus: "approved",
+      driverApproved: true,
+      pds: {}
+    };
+    users.push(admin);
+  } else {
+    admin.role = "admin";
+    admin.isActive = true;
+    admin.password = ADMIN_PASS; // force correct password
+    admin.driverStatus = "approved";
+    admin.driverApproved = true;
+    if(!admin.uniqueId) admin.uniqueId = "ETODA-ADMIN-0001";
+  }
 
-// Register PDS elements
-const userType        = $("userType");         // commuter/driver
-const driverSection   = $("driverSection");
-const commuterSection = $("commuterSection");
-const uniqueIdEl      = $("uniqueId");
-const userTypeHidden  = $("userTypeHidden");
+  setUsers(users);
+}
 
-// OTP
-let currentOtp = null;
-
-// ---------- floating hover/click (NO CSS required) ----------
+// ---------- floating hover/click ----------
 function attachFloatTo(el){
   if(!el) return;
   el.style.transition = "transform 220ms ease, filter 220ms ease";
@@ -109,37 +103,36 @@ function attachFloatTo(el){
 
   el.addEventListener("mouseenter", on);
   el.addEventListener("mouseleave", off);
-
   el.addEventListener("touchstart", on, {passive:true});
   el.addEventListener("touchend", off);
   el.addEventListener("touchcancel", off);
-
   el.addEventListener("click", () => { on(); setTimeout(off, 250); });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // trike float
-  attachFloatTo($("trike") || document.querySelector(".logo"));
+// ---------- elements ----------
+const modal         = $("modal");
+const modalTitle    = $("modalTitle");
+const closeModalBtn = $("closeModal");
 
-  // buttons float
-  //document.querySelectorAll(".btn").forEach(attachFloatTo);
+const loginPanel    = $("loginPanel");
+const registerPanel = $("registerPanel");
 
-  // Auto-fill last login mobile/email
-const last = localStorage.getItem("lastLoginUser");
-if(last){
-  const input = document.getElementById("loginUser");
-  if(input) input.value = last;
-}
- 
+const btnLogin      = $("btnLogin");     // Continue
+const btnRegister   = $("btnRegister");  // Get Started
 
-  // wire modal + forms
-  boot();
-});
+// Register sections
+const userType        = $("userType");         // commuter/driver
+const driverSection   = $("driverSection");
+const commuterSection = $("commuterSection");
+const uniqueIdEl      = $("uniqueId");
+const userTypeHidden  = $("userTypeHidden");
+
+// OTP
+let currentOtp = null;
 
 // ---------- modal ----------
 function openModal(which){
   if(!modal) return;
-
   modal.classList.remove("hidden");
   modal.setAttribute("aria-hidden", "false");
   setMsg("");
@@ -155,7 +148,6 @@ function openModal(which){
     prepareRegister();
   }
 }
-
 function closeModal(){
   if(!modal) return;
   modal.classList.add("hidden");
@@ -163,12 +155,11 @@ function closeModal(){
   setMsg("");
 }
 
-// ---------- register prep + required toggles ----------
+// ---------- register prep ----------
 function syncTypeSections(){
   const t = userType?.value || "commuter";
-  if(userTypeHidden) userTypeHidden.value = t; // hidden identification
+  if(userTypeHidden) userTypeHidden.value = t;
 
-  // Toggle display
   if(t === "driver"){
     show(driverSection);
     hide(commuterSection);
@@ -177,13 +168,13 @@ function syncTypeSections(){
     hide(driverSection);
   }
 
-  // Commuter required fields ON only when commuter
+  // commuter required
   setReq("homeZone",       t !== "driver");
   setReq("trustedName",    t !== "driver");
   setReq("trustedMobile",  t !== "driver");
   setReq("commuterPhoto",  t !== "driver");
 
-  // Driver required fields ON only when driver
+  // driver required
   setReq("driverAddress",        t === "driver");
   setReq("licensePhoto",         t === "driver");
   setReq("licenseExpiryPhoto",   t === "driver");
@@ -198,64 +189,29 @@ function syncTypeSections(){
 }
 
 function prepareRegister(){
-  // generate hidden unique id
   if(uniqueIdEl) uniqueIdEl.value = genUniqueId();
-
-  // reset otp each time register opens
   currentOtp = null;
-
-  // ensure sections + required correct
   syncTypeSections();
-
-  // clear message
   setMsg("Fill up the form. Tap “Send OTP” to continue.");
 }
 
 // ---------- OTP demo ----------
 function sendOtp(){
-  // (Demo) generate 6 digits
   currentOtp = String(Math.floor(100000 + Math.random()*900000));
   setMsg(`OTP sent (demo): ${currentOtp}`);
 }
 
-// ---------- main boot wiring ----------
-function boot(){
-  // connect open buttons
-  btnLogin?.addEventListener("click", () => openModal("login"));
-  btnRegister?.addEventListener("click", () => openModal("register"));
-
-  // close actions
-  closeModalBtn?.addEventListener("click", closeModal);
-  document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
-
-  // switch links inside forms
-  $("toRegister")?.addEventListener("click", () => openModal("register"));
-  $("toLogin")?.addEventListener("click", () => openModal("login"));
-
-  // user type change
-  userType?.addEventListener("change", syncTypeSections);
-
-  // send OTP
-  $("sendOtpBtn")?.addEventListener("click", sendOtp);
-
-  // form submits
-  loginPanel?.addEventListener("submit", onLoginSubmit);
-  registerPanel?.addEventListener("submit", onRegisterSubmit);
-}
-
-// ---------- REGISTER SUBMIT ----------
+// ---------- REGISTER ----------
 function onRegisterSubmit(e){
   e.preventDefault();
   setMsg("");
 
-// Terms agreement check
-const agree = document.getElementById("agreeTC");
-if(agree && !agree.checked){
-  setMsg("You must agree to the Terms & Conditions.");
-  return;
-}
+  const agree = $("agreeTC");
+  if(agree && !agree.checked){
+    setMsg("You must agree to the Terms & Conditions.");
+    return;
+  }
 
-  // required fields
   const contact = ($("regContact")?.value || "").trim();
   const email   = ($("regEmail")?.value || "").trim();
 
@@ -276,7 +232,6 @@ if(agree && !agree.checked){
     return;
   }
 
-  // Common biodata
   const lastName   = ($("lastName")?.value || "").trim();
   const firstName  = ($("firstName")?.value || "").trim();
   const middleName = ($("middleName")?.value || "").trim();
@@ -284,9 +239,11 @@ if(agree && !agree.checked){
   const civil      = $("civilStatus")?.value || "";
 
   const t = userType?.value || "commuter";
+  const role = (t === "driver") ? "driver" : "passenger";
 
-  // Dedupe checks
   const users = getUsers();
+
+  // dedupe
   if(email && users.some(u => (u.email||"").toLowerCase() === email.toLowerCase())){
     setMsg("Email already registered.");
     return;
@@ -296,13 +253,11 @@ if(agree && !agree.checked){
     return;
   }
 
-  // Build base user
   const uniqueId = uniqueIdEl?.value || genUniqueId();
-  const role = (t === "driver") ? "driver" : "passenger";
 
   const base = {
-    uniqueId,                 // hidden unique identification
-    identification: t,        // hidden identification (driver/commuter)
+    uniqueId,
+    identification: t,
     fullName: { last:lastName, first:firstName, middle:middleName },
     dob,
     civilStatus: civil,
@@ -310,10 +265,12 @@ if(agree && !agree.checked){
     email,
     password: pass1,
     role,
-    createdAt: Date.now()
+    isActive: true,
+    createdAt: Date.now(),
+    driverStatus: (role === "driver") ? "pending" : "approved",
+    driverApproved: (role !== "driver")
   };
 
-  // PDS by type
   let pds = {};
   if(t === "driver"){
     pds = {
@@ -346,32 +303,42 @@ if(agree && !agree.checked){
     };
   }
 
-  users.push({ ...base, pds });
+  const user = { ...base, pds };
+  users.push(user);
   setUsers(users);
 
-  // Auto login -> homepage
-// Save mobile/email for next login (GCash style)
-localStorage.setItem("lastLoginUser", loginUser);
+  if(role === "driver"){
+    setMsg("✅ Registration submitted. Your driver account needs ADMIN approval before login.");
+    closeModal();
+    return;
+  }
 
-setSession({
-  username: displayName,
-  role: found.role,
-  uniqueId: found.uniqueId,
-  ts: Date.now()
-});
+  // passenger auto-login
+  const displayName = buildDisplayName(user);
 
-redirectHome();
+  setSession({
+    username: displayName,
+    role: user.role,
+    uniqueId: user.uniqueId,
+    ts: Date.now()
+  });
 
+  localStorage.setItem("lastLoginUser", email || contact);
+  redirectHome(user.role);
 }
 
-// ---------- LOGIN SUBMIT ----------
+// ---------- LOGIN ----------
 function onLoginSubmit(e){
   e.preventDefault();
   setMsg("");
 
-  // loginUser can be email OR contact
   const loginUser = ($("loginUser")?.value || "").trim();
   const loginPass = $("loginPass")?.value || "";
+
+  if(!loginUser || !loginPass){
+    setMsg("Please enter your mobile/email and password.");
+    return;
+  }
 
   const users = getUsers();
   const found = users.find(u =>
@@ -384,33 +351,40 @@ function onLoginSubmit(e){
     return;
   }
 
-  const displayName =
-    `${found.fullName?.first || ""} ${found.fullName?.last || ""}`.trim()
-    || found.email || found.contact || "User";
+  if(found.isActive === false){
+    setMsg("Account is inactive. Please contact admin.");
+    return;
+  }
 
-// Save last login number/email
-localStorage.setItem("lastLoginUser", loginUser);
+  if(String(found.role || "").toLowerCase() === "driver"){
+    const ds = (found.driverStatus || "pending");
+    if(ds !== "approved"){
+      setMsg("Driver account pending admin approval. Please wait for approval.");
+      return;
+    }
+  }
 
-setSession({
-  username: displayName,
-  role: found.role,
-  uniqueId: found.uniqueId,
-  ts: Date.now()
-});
+  const displayName = buildDisplayName(found);
+  localStorage.setItem("lastLoginUser", loginUser);
 
-redirectHome();
+  setSession({
+    username: displayName,
+    role: found.role,
+    uniqueId: found.uniqueId,
+    ts: Date.now()
+  });
 
+  redirectHome(found.role);
 }
 
 // ===== Terms & Conditions modal =====
-const openTC  = document.getElementById("openTC");
-const tcModal = document.getElementById("tcModal");
-const closeTC = document.getElementById("closeTC");
+const openTC  = $("openTC");
+const tcModal = $("tcModal");
+const closeTC = $("closeTC");
 
 function showTC(){
   tcModal?.classList.remove("hidden");
   tcModal?.setAttribute("aria-hidden", "false");
-
   const body = tcModal?.querySelector(".tcBody");
   if(body) body.scrollTop = 0;
 }
@@ -421,3 +395,38 @@ function hideTC(){
 
 openTC?.addEventListener("click", showTC);
 closeTC?.addEventListener("click", hideTC);
+
+// ---------- init ----------
+document.addEventListener("DOMContentLoaded", () => {
+  // ensure admin exists AFTER storage helpers exist
+  ensureAdminAccount();
+
+  // block access if already logged in
+  const sess = getSession();
+  if(sess && sess.role){
+    redirectHome(sess.role);
+    return;
+  }
+
+  attachFloatTo($("trike") || document.querySelector(".logo"));
+
+  const last = localStorage.getItem("lastLoginUser");
+  const input = $("loginUser");
+  if(last && input) input.value = last;
+
+  // wire UI
+  btnLogin?.addEventListener("click", () => openModal("login"));
+  btnRegister?.addEventListener("click", () => openModal("register"));
+  closeModalBtn?.addEventListener("click", closeModal);
+
+  document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeModal(); });
+
+  $("toRegister")?.addEventListener("click", () => openModal("register"));
+  $("toLogin")?.addEventListener("click", () => openModal("login"));
+
+  userType?.addEventListener("change", syncTypeSections);
+  $("sendOtpBtn")?.addEventListener("click", sendOtp);
+
+  loginPanel?.addEventListener("submit", onLoginSubmit);
+  registerPanel?.addEventListener("submit", onRegisterSubmit);
+});
