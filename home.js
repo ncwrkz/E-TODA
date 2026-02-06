@@ -1,5 +1,16 @@
+// =========================
+// home.js (REWRITTEN CLEAN)
+// - session guard
+// - letter avatar
+// - header + menu info
+// - role panels
+// - account dropdown
+// - logout confirmation modal
+// =========================
+
 const SESSION_KEY = "esakay_session_v1";
 
+// ---------- helpers ----------
 function getSession(){
   try { return JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); }
   catch { return null; }
@@ -7,38 +18,37 @@ function getSession(){
 
 function setText(id, value){
   const el = document.getElementById(id);
-  if(el) el.textContent = value ?? "—";
+  if(el) el.textContent = (value ?? "—");
 }
 
-function logout(){
-  localStorage.removeItem(SESSION_KEY);
-  window.location.href = "index.html";
+function go(url){
+  if(url) window.location.href = url;
 }
-
-const sess = getSession();
-if(!sess){
-  window.location.href = "index.html";
-}
-
-buildLetterAvatar(sess.username);
 
 function buildLetterAvatar(name){
-
-  const letter = (name || "?")
-    .trim()
-    .charAt(0)
-    .toUpperCase();
-
-  document.querySelectorAll(".letterAvatar").forEach(el=>{
+  const letter = (name || "?").trim().charAt(0).toUpperCase() || "?";
+  document.querySelectorAll(".letterAvatar").forEach(el => {
     el.textContent = letter;
   });
-
 }
 
-// Fill header info safely
+// ---------- session guard ----------
+const sess = getSession();
+if(!sess){
+  go("index.html");
+}
+
+// ---------- fill UI ----------
+buildLetterAvatar(sess.username);
+
 setText("headerName", sess.username || "User");
 setText("uid", sess.uniqueId || "—");
 setText("role", (sess.role || "passenger").toUpperCase());
+
+// Menu info (if you have these ids)
+setText("menuName", sess.username || "User");
+setText("menuRole", (sess.role || "passenger").toUpperCase());
+setText("menuId", sess.uniqueId || "—");
 
 // Role panels
 const role = sess.role || "passenger";
@@ -48,25 +58,21 @@ document.getElementById("adminPanel")?.classList.toggle("hidden", role !== "admi
 
 // Buttons navigation
 document.querySelectorAll("[data-go]").forEach(btn=>{
-  btn.addEventListener("click", () => {
-    window.location.href = btn.getAttribute("data-go");
-  });
+  btn.addEventListener("click", () => go(btn.getAttribute("data-go")));
 });
 
-// Logout
-document.getElementById("logoutBtn")?.addEventListener("click", logout);
-
-
-// ===== Account dropdown logic =====
+// ---------- account dropdown ----------
 const acctBtn  = document.getElementById("acctBtn");
 const acctMenu = document.getElementById("acctMenu");
 
 function openAcct(){
-  acctMenu?.classList.remove("hidden");
+  if(!acctMenu) return;
+  acctMenu.classList.remove("hidden");
   acctBtn?.setAttribute("aria-expanded", "true");
 }
 function closeAcct(){
-  acctMenu?.classList.add("hidden");
+  if(!acctMenu) return;
+  acctMenu.classList.add("hidden");
   acctBtn?.setAttribute("aria-expanded", "false");
 }
 function toggleAcct(){
@@ -79,31 +85,42 @@ acctBtn?.addEventListener("click", (e) => {
   toggleAcct();
 });
 
-// Close when clicking outside (menu only)
+// Close menu when clicking outside
 document.addEventListener("click", (e) => {
   if(!acctMenu || acctMenu.classList.contains("hidden")) return;
   if(acctMenu.contains(e.target) || acctBtn?.contains(e.target)) return;
   closeAcct();
 });
 
-// Navigate menu buttons
+// Menu navigation buttons
 document.querySelectorAll(".acctItem[data-go]").forEach(btn=>{
   btn.addEventListener("click", ()=>{
-    const to = btn.getAttribute("data-go");
-    if(to) window.location.href = to;
+    closeAcct();
+    go(btn.getAttribute("data-go"));
   });
 });
 
-// Fill menu info safely
-function setText(id, value){
-  const el = document.getElementById(id);
-  if(el) el.textContent = value ?? "—";
+// ---------- logout confirmation ----------
+const logoutBtn     = document.getElementById("logoutBtn");
+const logoutModal   = document.getElementById("logoutModal");
+const cancelLogout  = document.getElementById("cancelLogout");
+const confirmLogout = document.getElementById("confirmLogout");
+
+function openLogoutConfirm(){
+  closeAcct();
+  logoutModal?.classList.remove("hidden");
+}
+function closeLogoutConfirm(){
+  logoutModal?.classList.add("hidden");
+}
+function doLogout(){
+  localStorage.removeItem(SESSION_KEY);
+  go("index.html");
 }
 
-setText("menuName", sess.username || "User");
-setText("menuRole", (sess.role || "passenger").toUpperCase());
-setText("menuId", sess.uniqueId || "—");
+// Open confirm modal on logout click
+logoutBtn?.addEventListener("click", openLogoutConfirm);
 
-// Optional: set avatar if you store it later
-// document.getElementById("acctAvatar").src = sess.avatar || "images/avatar.png";
-// document.getElementById("menuAvatar").src = sess.avatar || "images/avatar.png";
+// Buttons inside modal
+cancelLogout?.addEventListener("click", closeLogoutConfirm);
+confirmLogout?.addEventListener("click", doLogout);

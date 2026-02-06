@@ -41,10 +41,10 @@
     <button class="acctItem" role="menuitem" data-go="home.html">
       <span class="acctIcon">🏠</span> Home
     </button>
-    <button class="acctItem" role="menuitem" data-go="settings.html">
+    <button class="acctItem" role="menuitem" data-go="home.html">
       <span class="acctIcon">⚙️</span> Settings & privacy
     </button>
-    <button class="acctItem" role="menuitem" data-go="help.html">
+    <button class="acctItem" role="menuitem" data-go="home.html">
       <span class="acctIcon">❓</span> Help & support
     </button>
     <div class="acctDivider"></div>
@@ -92,6 +92,25 @@
   </section>
 
 </main>
+
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="modal hidden">
+
+  <div class="modalCard small">
+
+    <h3>Confirm Logout</h3>
+    <p class="muted">Are you sure you want to log out?</p>
+
+    <div class="modalActions">
+      <button id="cancelLogout" class="btn">Cancel</button>
+      <button id="confirmLogout" class="btn danger">Logout</button>
+    </div>
+
+  </div>
+
+</div>
+
 
 <script src="home.js"></script>
 </body>
