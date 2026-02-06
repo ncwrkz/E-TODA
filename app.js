@@ -119,6 +119,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // buttons float
   //document.querySelectorAll(".btn").forEach(attachFloatTo);
 
+  // Auto-fill last login mobile/email
+const last = localStorage.getItem("lastLoginUser");
+if(last){
+  const input = document.getElementById("loginUser");
+  if(input) input.value = last;
+}
+ 
+
   // wire modal + forms
   boot();
 });
@@ -337,9 +345,18 @@ if(agree && !agree.checked){
   setUsers(users);
 
   // Auto login -> homepage
-  const displayName = `${firstName} ${lastName}`.trim() || email || contact || "User";
-  setSession({ username: displayName, role, uniqueId, ts: Date.now() });
-  redirectHome();
+// Save mobile/email for next login (GCash style)
+localStorage.setItem("lastLoginUser", loginUser);
+
+setSession({
+  username: displayName,
+  role: found.role,
+  uniqueId: found.uniqueId,
+  ts: Date.now()
+});
+
+redirectHome();
+
 }
 
 // ---------- LOGIN SUBMIT ----------
@@ -366,8 +383,18 @@ function onLoginSubmit(e){
     `${found.fullName?.first || ""} ${found.fullName?.last || ""}`.trim()
     || found.email || found.contact || "User";
 
-  setSession({ username: displayName, role: found.role, uniqueId: found.uniqueId, ts: Date.now() });
-  redirectHome();
+// Save last login number/email
+localStorage.setItem("lastLoginUser", loginUser);
+
+setSession({
+  username: displayName,
+  role: found.role,
+  uniqueId: found.uniqueId,
+  ts: Date.now()
+});
+
+redirectHome();
+
 }
 
 // ===== Terms & Conditions modal =====
