@@ -1,98 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Download E-TODA</title>
-  <link rel="icon" type="image/png" href="logo.png" />
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>E-TODA – Apps on E-TODA Store</title>
+  <meta name="description" content="E-TODA official app page (Play Store style) – download APK and contact support." />
+  <link rel="icon" href="logo.png"/>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <header class="topbar">
-    <div class="brand">
-      <div class="brandLogo">
-      <img src="https://s12.gifyu.com/images/bvTlx.png" alt="E-TODA Logo">
+<header class="psTop">
+  <a class="psBrand" href="index.html" aria-label="E-TODA Home">
+    <img class="psLogo" src="logo.png" alt="E-TODA Logo" onerror="this.style.display='none'">
+    <span class="psBrandText">E-TODA</span>
+  </a>
+
+  <nav class="psNav">
+    <a href="#about">About</a>
+    <a href="#screens">Screenshots</a>
+    <a href="#whatsnew">What’s new</a>
+  <!--  <a href="https://discord.gg/vCAhHkZvnS">Discord Support</a> -->
+  </nav>
+</header>
+
+<main class="psWrap">
+  <!-- App header block -->
+  <section class="appHeader">
+    <div class="appIcon">
+      <img src="logo.png" alt="E-TODA" onerror="this.style.display='none'">
     </div>
 
-      <div class="brandName">E-TODA</div>
-    </div>
+    <div class="appInfo">
+      <h1 class="appName">E-TODA</h1>
+      <div class="appDev">E-TODA Transportation</div>
+      <div class="appMeta">Transportation • Booking • GPS Tracking</div>
 
-    <nav class="navlinks">
-   <!--   <a href="#privacy">Terms & Conditions</a> -->
-    </nav>
-
-    <div class="topActions">
-      <a class="btn primary" id="topDownload" href="https://drive.usercontent.google.com/download?id=1UrRBRR8H0jQknnNvI1vduE2ZOUd7uT3A&export=download" download>
-        Download <span class="dl">⬇</span>
-      </a>
-    </div>
-  </header>
-
-  <!-- Main -->
-  <main class="container">
-    <section class="hero">
-      <div class="left">
-        <h1>Download E-TODA</h1>
-        <p class="subtitle">
-          Book tricycles faster and track rides in real-time across your devices.
-        </p>
-        <p class="legal">
-          By installing E-TODA, you agree to our
-          <a href="#terms">Terms</a> & <a href="#policy">Privacy Policy</a>.
-        </p>
-
-        <div class="downloadCard">
-          <div class="cardHeader">
-            <div class="cardMiniTitle">Android</div>
-            <div class="cardTitle">APK (Latest)</div>
-          </div>
-
-          <p class="cardText">
-            Get the official E-TODA APK for passengers and drivers.
-            Requires Android 8.0 or newer.
-          </p>
-
-          <div class="cardActions">
-
-            <div class="meta">
-              <div><span>Version:</span> <b id="ver">v1.0.0</b></div>
-              <div><span>Updated:</span> <b id="updated">Feb 14, 2026</b></div>
-            </div>
-          </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="big">4.6★</div>
+          <div class="small">Ratings</div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="big">2</div>
+          <div class="small">Downloads</div>
+        </div>
+        <div class="divider"></div>
+        <div class="stat">
+          <div class="big" id="age">Everyone</div>
+          <div class="small">Content rating</div>
         </div>
       </div>
 
-      <div class="right">
-        <!-- Replace with your own illustration (png/svg) -->
-        <div class="illusWrap">
-          <img
-            src="https://s12.gifyu.com/images/bvTlx.png"
-            alt="E-TODA Illustration"
-            onerror="this.style.display='none';document.querySelector('.illusFallback').style.display='block';"
-          />
-          <div class="illusFallback">
-            <div class="mock">
-              <div class="mockTop"></div>
-              <div class="mockBody">
-                <div class="bubble"></div>
-                <div class="bubble"></div>
-                <div class="bubble short"></div>
-              </div>
-            </div>
-            <p>Electronic Tricycle On Demand Application</p>
-          </div>
-        </div>
+      <div class="ctaRow">
+        <!-- ✅ Put your APK link here -->
+        <a class="btnInstall" id="installBtn" href="https://drive.usercontent.google.com/download?id=1UrRBRR8H0jQknnNvI1vduE2ZOUd7uT3A&export=download" download>Install</a>
+        <button class="btnGhost" id="shareBtn" type="button">Share</button>
+        <a class="btnGhost" href="https://discord.gg/vCAhHkZvnS">Discord</a>
       </div>
-    </section>
-  </main>
 
-  <script>
-    // optional: edit these
-    document.getElementById("ver").textContent = "v1.2.9";
-    document.getElementById("updated").textContent = "Feb 14, 2026";
-  </script>
+      <div class="tinyNote">
+        By downloading, you agree to E-TODA <a href="#terms">Terms</a> & <a href="#privacy">Privacy Policy</a>.
+      </div>
+    </div>
+
+    <div class="heroArt">
+      <img src="assets/hero-phone.png" alt="App preview" onerror="this.style.display='none'">
+      <div class="heroFallback">
+        <div class="miniCard"></div>
+        <div class="miniCard"></div>
+        <div class="miniCard"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots -->
+  <section class="card" id="screens">
+    <div class="cardTitleRow">
+      <h2>Screenshots</h2>
+      <span class="muted">Swipe to view</span>
+    </div>
+
+    <div class="shots">
+      <img src="assets/s1.png" alt="Screenshot 1" onerror="this.style.display='none'">
+      <img src="assets/s2.png" alt="Screenshot 2" onerror="this.style.display='none'">
+      <img src="assets/s3.png" alt="Screenshot 3" onerror="this.style.display='none'">
+      <!-- add more if you want -->
+    </div>
+
+    <div class="hint muted">No records as of now!</div>
+  </section>
+
+  <!-- About -->
+  <section class="card" id="about">
+    <div class="cardTitleRow">
+      <h2>About this app</h2>
+      <span class="chip">Official APK</span>
+    </div>
+
+    <p class="para">
+      E-TODA is a tricycle booking platform designed for fast, safe, and transparent ride requests.
+      Passengers can request rides, drivers can accept bookings, and both can track trips in real-time.
+    </p>
+
+    <div class="infoGrid">
+      <div class="infoItem">
+        <div class="k">Version</div>
+        <div class="v" id="ver">v1.0.0</div>
+      </div>
+      <div class="infoItem">
+        <div class="k">Updated</div>
+        <div class="v" id="updated">Feb 15, 2026</div>
+      </div>
+      <div class="infoItem">
+        <div class="k">Requires Android</div>
+        <div class="v">8.0 and up</div>
+      </div>
+      <div class="infoItem">
+        <div class="k">Downloads</div>
+        <div class="v">2</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's new -->
+  <section class="card" id="whatsnew">
+    <div class="cardTitleRow">
+      <h2>What’s new</h2>
+      <span class="muted">Latest update</span>
+    </div>
+
+    <ul class="bullets">
+      <li>Improved GPS tracking accuracy</li>
+      <li>Faster booking notifications</li>
+      <li>Bug fixes and performance improvements</li>
+    </ul>
+  </section>
+
+  <!-- Ratings -->
+  <section class="card" id="ratings">
+    <div class="cardTitleRow">
+      <h2>Ratings and reviews</h2>
+      <span class="muted">Preview</span>
+    </div>
+
+    <div class="ratingBox">
+      <div class="score">
+        <div class="scoreBig">4.6</div>
+        <div class="stars">★★★★★</div>
+        <div class="muted">Based on user feedback</div>
+      </div>
+
+      <div class="bars">
+        <div class="barRow"><span>5</span><div class="bar"><div class="fill" style="width:78%"></div></div></div>
+        <div class="barRow"><span>4</span><div class="bar"><div class="fill" style="width:14%"></div></div></div>
+        <div class="barRow"><span>3</span><div class="bar"><div class="fill" style="width:5%"></div></div></div>
+        <div class="barRow"><span>2</span><div class="bar"><div class="fill" style="width:2%"></div></div></div>
+        <div class="barRow"><span>1</span><div class="bar"><div class="fill" style="width:1%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="reviewGrid">
+      <div class="review">
+        <div class="revTop"><b>Juan D.</b> <span class="muted">• 5★</span></div>
+        <div class="revText">Easy to book and the tracking is helpful.</div>
+      </div>
+      <div class="review">
+        <div class="revTop"><b>Maria L.</b> <span class="muted">• 4★</span></div>
+        <div class="revText">Good app, would love more payment options.</div>
+      </div>
+    </div>
+
+    <div class="ctaBottom">
+      <a class="btnInstall" href="https://drive.usercontent.google.com/download?id=1UrRBRR8H0jQknnNvI1vduE2ZOUd7uT3A&export=download" download>Install</a>
+      <a class="btnGhost" href="https://discord.gg/vCAhHkZvnS">Contact support</a>
+    </div>
+  </section>
+
+  <footer class="psFooter">
+    <div>© <span id="year"></span> E-TODA</div>
+    <div class="muted">Electronic Tricycle On Demand Application.</div>
+  </footer>
+</main>
+
+<script>
+  // Edit these anytime
+  document.getElementById("ver").textContent = "v1.0.0";
+  document.getElementById("updated").textContent = "Feb 15, 2026";
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Share button
+  document.getElementById("shareBtn").addEventListener("click", async () => {
+    const url = location.href;
+    try{
+      if(navigator.share){
+        await navigator.share({ title: "E-TODA", text: "Download E-TODA", url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert("Link copied!");
+      }
+    } catch {}
+  });
+</script>
 </body>
 </html>
-
