@@ -163,46 +163,46 @@
     </div>
   </div>
 
-  <script>
-    const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxH1mHy24Ze6b3JwvnOxgdA9QuxqJD6SDXzeizRFz8bW7SNvswY9lxD6klxyiQe4rnMnQ/exec";
+<script>
+const API_ENDPOINT = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLguHVZxX-gXmt3p2nlHuZ4Ld3bQmGRi9l2uEcmiqJ4l-Rt7jSz9SbgQwEQx1dWV-NHPs2_0iE1ASaJ-8ZSoy51JALyIjkqSO_wL6XRf9ylTgTGmuqkBayPZiSCLIEfKKoXGnVd5BYqDad4OL1RZcKlUnlzU_IaoRnujntrmUB5741XdEI8ku4lFGBH3cfraHroP0TLQ9Nh5Ji10rJavy4aPN4QqbMPkj77vKEqsGwzCkPMVtH0UueGB7gJ77fuDjJ1-M9qk4GrUnsPq4xscE-Ys_uSxMI08OxcbgrxE&lib=M8oz41fGlsvf2FpubT4epPy2E7nf2rSpQ";
 
-    const form = document.getElementById("f");
-    const statusEl = document.getElementById("status");
-    const sendBtn = document.getElementById("send");
+const form = document.getElementById("f");
+const statusEl = document.getElementById("status");
+const sendBtn = document.getElementById("send");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      statusEl.textContent = "";
-      sendBtn.disabled = true;
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  statusEl.textContent = "";
+  sendBtn.disabled = true;
 
-      const data = {
-        name: document.getElementById("name").value.trim(),
-        role: document.getElementById("role").value.trim(),
-        contact: document.getElementById("contact").value.trim(),
-        category: document.getElementById("cat").value.trim(),
-        subject: document.getElementById("subj").value.trim(),
-        message: document.getElementById("msg").value.trim(),
-        page: location.href
-      };
+  const data = {
+    name: document.getElementById("name").value.trim(),
+    role: document.getElementById("role").value.trim(),
+    contact: document.getElementById("contact").value.trim(),
+    category: document.getElementById("cat").value.trim(),
+    subject: document.getElementById("subj").value.trim(),
+    message: document.getElementById("msg").value.trim(),
+    page: location.href
+  };
 
-      try{
-        const res = await fetch(API_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        const out = await res.json().catch(()=> ({}));
-        if(!out.ok) throw new Error(out.error || "Send failed");
-
-        form.reset();
-        statusEl.textContent = "✅ Sent!";
-      }catch(err){
-        statusEl.textContent = "❌ " + (err.message || "Failed to send.");
-      }finally{
-        sendBtn.disabled = false;
-      }
+  try{
+    await fetch(API_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",                 // ✅ avoids CORS block from GitHub Pages
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
-  </script>
+
+    form.reset();
+    statusEl.textContent = "✅ Sent! (Check Discord)";
+  }catch(err){
+    statusEl.textContent = "❌ Failed to send.";
+    console.error(err);
+  }finally{
+    sendBtn.disabled = false;
+  }
+});
+</script>
+
 </body>
 </html>
